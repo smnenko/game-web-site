@@ -1,0 +1,146 @@
+/*
+*   HEADER
+*/
+
+.navbar {
+    background-color: red;
+    margin: 0;
+    height: 5vh;
+}
+
+.navbar-brand {
+    color: white !important;
+    text-size: 32px;
+}
+
+/*
+*   FILTER
+*/
+
+.filter-wrapper {
+    background-color: pink;
+    height: 95vh;
+    width: 25%;
+    float:left;
+}
+
+.filter-text {
+    color: white;
+    font-size: 26px;
+    padding: 0px 0px 0px 25px;
+    font-size: 46px;
+}
+
+.filter-line {
+    color: white;
+}
+
+#filter-button {
+    padding: 0px 0px 0px 10px;
+    color: white !important;
+    float: left;
+}
+
+.filer-parameters {
+    width: 100%;
+}
+
+.filter-param {
+    width: 100%;
+    padding: 5px 10px;
+}
+
+.filter-param-name {
+    font-size: 22px;
+    float: left;
+}
+
+.filter-param-line {
+    width: 60%;
+    height: 100%;
+    border-bottom: 1px solid white;
+    padding-top:22px;
+    float: right;
+}
+
+.filter-param-item {
+    position: relative;
+    left: 12%;
+    bottom: 25px;
+    text-size:6px;
+    background-color: white;
+    padding: 0px 2px;
+}
+
+.filter-parameters .filter-param:last-child .filter-param-name {
+    text-align:left;
+    float:none;
+}
+
+.filter-rating {
+    width: 100%;
+}
+
+$multiRangeHeight: 2em;
+.filter-rating-slider {
+    display: block;
+    width: 80%;
+    height: $multiRangeHeight;
+    margin: 0;
+    pointer-events: none;
+    & + input[type=range][multiple]{
+        margin-top: $multiRangeHeight * -1;
+    }
+}
+
+@mixin multirange-thumb {
+    pointer-events: all;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    @include multirange-thumb;
+}
+
+input[type=range]::-moz-slider-thumb {
+    @include multirange-thumb;
+}
+
+input[type=range]::-ms-slider-thumb {
+    @include multirange-thumb;
+}
+
+/*
+*   CONTENT
+*/
+
+.container {
+    width: 75%;
+    height: 100%;
+    float: left;
+}
+
+/*
+*   SEARCH
+*/
+
+.search {
+    width: 80%;
+    height 2vh;
+    padding: 15px 10%;
+}
+
+.search-input {
+    width: 100%;
+}
+
+.search-input:active, .search-input:hover, .search-input:focus, .search-input {
+    border: 0;
+    border-bottom: 2px solid black;
+    outline: none;
+    outline-offset: none;
+    font-size: 22px;
+}
+
+.search-input::-webkit-input-placeholder {
+    text-align: center;
+}

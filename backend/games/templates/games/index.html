@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block container %}
+    {% include "search.html" %}
+
+    <div class="content">
+        {% for item in items %}
+        {{ item }}
+        {% endfor %}
+    </div>
+
+    {% include "pages.html" %}
+
+{% endblock %}
