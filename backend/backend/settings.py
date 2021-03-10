@@ -129,4 +129,4 @@ STATICFILES_DIRS = [
     BASE_DIR / 'backend/static'
 ]
 
-STATIC_ROOT = BASE_DIR / 'backend/static/static_root'
+STATIC_ROOT = BASE_DIR / 'backend/static_root'
