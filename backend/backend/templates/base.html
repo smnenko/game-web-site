@@ -3,63 +3,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>GameMuster</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    {% block title %}
+    {% endblock %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
 <body>
-
-    <div class="container">
-        <div class="header row"></div>
-        <div class="row">
-            <div class="col filter">
-
-            </div>
-            <div class="col content">
-
-            </div>
-        </div>
+<header class="row header">
+    <div class="col header-content d-flex justify-content-start">
+        <img class="header-logo"
+             src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/PlayStationTriangle.svg/576px-PlayStationTriangle.svg.png"
+             alt="">
+        <h2 class="header-name"><a href="/">GameMuster</a></h2>
     </div>
-    <!--<header>
-        <nav class="navbar navbar-light">
-            <b><a class="navbar-brand nav-text" href="#">GameMuster</a></b>
-        </nav>
-    </header>
-    <div class="filter-wrapper">
-         <a class="btn" id="filter-button">A</a>
-        <div id="filter" style="color:white;">
-            <div class="filter-text">
-                Filters
-            </div>
-            <hr class="filter-line" />
-            <div class="filter-parameters">
-                <div class="filter-param">
-                    <div class="filter-param-name">Platforms</div>
-                    <div class="filter-param-line"> </div>
-                    <button class="btn filter-param-item">PC</button>
-                    <button class="btn filter-param-item">PS4</button>
-                </div>
-                <div class="filter-param">
-                    <div class="filter-param-name">Genres</div>
-                    <div class="filter-param-line"> </div>
-                    <button class="btn filter-param-item">Platformer</button>
-                </div>
-                <div class="btn filter-param">
-                    <div class="filter-param-name">User rating</div>
-                    <div class="filter-rating">
-                        <input class="filter-rating-slider" type="range" data-values="5.0 10.0" min="0.0" max="10.0" multiple>
-                        <div id="range-values"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+</header>
+<div class="container-fluid">
+    {% if filter == True %}
+    <div class="col-2 filter">
+        {% include "filter.html" %}
     </div>
-    <div class="container">
-        {% block container %}
-        {% endblock %}
-    </div>
-    -->
+    {% endif %}
+    {% block container %}
+    {% endblock %}
+</div>
+</div>
 
-    <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/base.js' %}"></script>
 </body>
 </html>

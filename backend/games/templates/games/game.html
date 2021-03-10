@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>GameMuster - {{ item.name }}</title>
+{% endblock %}
+
+{% block container %}
+<div class="row game">
+    <div class="col-8">
+        <div class="col-12 d-flex justify-content-start align-middle">
+            <h2 class="text-uppercase font-weight-bold game-name">{{ item.name }}</h2>
+            <h3 class="text-uppercase font-weight-bold item-genre">Must</h3>
+        </div>
+        <div class="col-12">{{ item.short_description }}</div>
+        <div class="row">
+            <div class="col-9">
+                <div class="col-12">
+                    <h5 class="font-weight-bold">Description</h5>
+                </div>
+                <div class="col-12">{{ item.description }}</div>
+                <div class="col-12">
+                    <h5 class="font-weight-bold">Release Date</h5>
+                </div>
+                <div class="col-12">{{ item.date_release }}</div>
+                <div class="col-12">
+                    <h5 class="font-weight-bold">Screenshots</h5>
+                </div>
+                <div class="row">
+                    {% for screenshot in screenshots %}
+                    <div class="col-4">
+                        <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/co1w1t.jpg" alt="">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="row">
+                    <div class="col-12">
+                        <h5 class="font-weight-bold">Ratings</h5>
+                        <div class="col-12">
+                            <div class="row font-weight-bold">
+                                <div class="col-12 user-rating d-inline-flex justify-content-between">
+                                    <div>
+                                        Users
+                                    </div>
+                                    <div>
+                                        {{ item.ratings.users }}({{ item.ratings.users_reviews }} reviews)
+                                    </div>
+                                </div>
+                                <div class="col-12 critics-rating d-inline-flex justify-content-between">
+                                    <div>
+                                        Critics
+                                    </div>
+                                    <div>
+                                        {{ item.ratings.critics }}({{ item.ratings.critics_reviews }} reviews)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <h5 class="font-weight-bold">Genres</h5>
+                        <div class="d-flex justify-content-start">
+                                {% for genre in item.genres.all %}
+                                <div class="col-3 item-genre font-weight-bold">{{ genre.name }}</div>
+                                {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <h5 class="font-weight-bold">Platforms</h5>
+                            <div class="d-flex justify-content-start">
+                                {% for platform in item.platforms.all %}
+                                <div class="col-3 item-genre font-weight-bold">{{ platform.name }}</div>
+                                {% endfor %}
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-3">
+        <h2 class="font-weight-bold">#{{ item.name }} Tweets</h2>
+    </div>
+</div>
+{% endblock %}
