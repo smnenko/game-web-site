@@ -39,16 +39,17 @@ class Game(AbstractModel):
     short_description = models.CharField(max_length=256)
     logo = models.URLField()
     description = models.TextField(max_length=2048)
-    genres = models.ManyToManyField(to=Genre)
-    platforms = models.ManyToManyField(to=Platform)
+    genres = models.CharField(default='', max_length=128)
+    platforms = models.CharField(default='', max_length=256)
     date_release = models.DateField(default=date.today)
-    ratings = models.ForeignKey(to=Rating, on_delete=models.CASCADE)
+    ratings_users = models.CharField(default='', max_length=32)
+    ratings_critics = models.CharField(default='', max_length=32)
 
     def __str__(self):
         return self.name
 
     def __repr__(self):
-        return f'Game[{self.id}, {self.name}, {self.description[:32]}, {self.categories}, {self.date_release}, ' \
+        return f'Game[{self.id}, {self.name}, {self.description[:32]}, {self.genres}, {self.date_release}, ' \
                f'{self.date_created}'
 
 
