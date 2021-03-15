@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>GameMusters - Sign up</title>
+{% endblock %}
+
+{% block container %}
+<div class="login" style="padding-top: 10%">
+    <h2>Sign Up</h2>
+    <form action="signup" method="POST" class="signup">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ form.subject.errors }}
+        <input type="submit" value="Sign me up!" class="btn btn-login">
+    </form>
+</div>
+{% endblock %}

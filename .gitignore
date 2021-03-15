@@ -1,4 +1,7 @@
 *.sqlite3
 /venv/
 /backend/__pycache__/
-/.idea/
+.idea/
+/backend/backend/secrets.py
+**/__pycache__
+**/migrations

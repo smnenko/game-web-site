@@ -8,7 +8,7 @@ body {
     width: 100%;
 }
 
-.container {
+.container-fluid {
     height: 90vh;
     width: 100%;
 }
@@ -41,6 +41,20 @@ body {
 .header-name a {
     color: white;
     text-decoration: none;
+}
+
+.header-user p {
+    font-weight: bold;
+    color: white;
+}
+
+.header-user p a {
+    color: white;
+    text-decoration: none;
+}
+
+.header-user p a:hover {
+    border-bottom: 2px solid white;
 }
 
 /*
@@ -123,7 +137,7 @@ body {
     height: 10vh;
     width: 80%;
     margin: 0 auto;
-    padding: 15px 0px;
+    padding-top: 30px;
 }
 
 .search-input {
@@ -135,11 +149,17 @@ body {
 
 .search-input::-webkit-input-placeholder {
    text-align:center;
+   font-weight: bold;
 }
 
 .search-input:active, .search-input:hover, .search-input:focus {
     outline: none;
     outline-offset: none;
+}
+
+.search-btn {
+    bottom: 30px;
+    float: right;
 }
 
 .main-content {
@@ -258,6 +278,65 @@ body {
     padding: 1%;
 }
 
-.pages {
-    height: 10vh;
+.pages a {
+    width: 5vh;
+    height: 5vh;
+    background-color: red;
+    color: white;
+    border-radius: 0;
+    vertical-align: middle;
+    font-size: 18px;
+}
+
+.pages a:hover {
+    position: relative;
+    bottom: 5px;
+}
+
+/*
+*   GAME
+*/
+
+.tweet {
+    background-color: red;
+    color: white;
+    padding: 5px;
+    margin-bottom: 5px;
+    box-shadow: 0 0 10px red;
+}
+
+/*
+*   LOGIN
+*/
+
+.login, .login h2, .form-input {
+    font-weight: bold;
+}
+
+.login {
+    text-align: center;
+    padding-top: 15%;
+}
+
+.form-input {
+    border: 0;
+    border-bottom: 2px solid black;
+    border-left: 2px solid black;
+}
+
+.btn-login {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 0 10px red;
+}
+
+.form-input:active, .form-input:hover, .form-input:focus {
+    outline: none;
+    outline-offset: none;
+}
+
+.signup {
+    display: inline-block;
+    width: 33%;
 }
