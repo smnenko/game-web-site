@@ -1,0 +1,12 @@
+<div class="d-flex justify-content-center m-auto" style="width: 5vh; height: 5vh;">
+    {% for page in pages %}
+    <a class="btn font-weight-bold mr-3  bg-danger text-light rounded" style="font-size: 18px;" href="/page/{{ page }}">{{ page }}</a>
+    {% endfor %}
+
+    <style>
+        .pages a:hover {
+    position: relative;
+    bottom: 5px;
+}
+    </style>
+</div>

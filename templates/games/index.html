@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>GameMuster</title>
+{% endblock %}
+
+{% block container %}
+<div class="container h-75">
+    <div class="row search">
+        {% include "search.html" %}
+    </div>
+    <div class="w-100 h-100">
+        {% include "games.html" %}
+    </div>
+    <div class="row pages">
+        {% include "pages.html" %}
+    </div>
+</div>
+{% endblock %}

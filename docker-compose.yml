@@ -1,0 +1,59 @@
+version: '3.9'
+
+services:
+
+  nginx:
+    container_name: test_deploy_nginx
+    build: ./nginx
+    ports:
+        - 8008:80
+    depends_on:
+        - web
+
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: rabbitmq
+    image: rabbitmq
+    ports:
+    - 5672:5672
+
+  celery_worker:
+    container_name: celery_worker
+    depends_on:
+      - web
+      - db
+      - rabbitmq
+    image: web-image
+    command: "celery -A backend worker -l INFO"
+
+  celery_beat:
+    container_name: celery_beat
+    depends_on:
+      - web
+      - db
+      - rabbitmq
+    image: web-image
+    command: "celery -A backend beat -l info"
+
+  db:
+    image: postgres
+    restart: always
+    volumes:
+    - ./data/db:/var/lib/postgres/data
+    environment:
+      - POSTGRES_DB=game-web-site
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+    - 5432:5432
+
+  web:
+    build: .
+    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+    - .:/code
+    ports:
+    - 8000:8000
+    depends_on:
+      - db
+    image: web-image

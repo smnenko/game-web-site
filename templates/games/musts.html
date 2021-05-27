@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>GameMuster - MyMusts</title>
+{% endblock %}
+
+{% block container %}
+<h1 class="mt-3 ml-3 font-weight-bold">My MUST</h1>
+    <div class="container">
+        <div class="row">
+            {% for game in games %}
+            <div class="col-2">
+                {{ game.game }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
