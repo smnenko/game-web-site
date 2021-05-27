@@ -2,6 +2,5 @@
 /venv/
 /__pycache__/
 .idea/
-/backend/secrets.py
 **/__pycache__
 **/migrations
