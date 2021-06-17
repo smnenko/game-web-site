@@ -23,6 +23,7 @@ services:
       - web
       - db
       - rabbitmq
+      - celery_beat
     image: web-image
     command: "celery -A backend worker -l INFO"
 

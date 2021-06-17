@@ -72,7 +72,7 @@ def index(request, page=1):
         pages = total_pages[page - 1:5 + page - 1]
         if page > 1:
             pages.insert(0, 1)
-        if page == 1 or page is None:
+        if page == 1 or page is None and total_pages:
             pages.append(total_pages[::-1][0])
         if page > len(total_pages):
             return HttpResponseNotFound('Страница не найдена')
@@ -88,20 +88,20 @@ def index(request, page=1):
 
 def game(request, game_id):
     game = Game.objects.filter(pk=game_id)[0]
-
+    print(str(game.screenshots).split(':'))
     context = {
         'game': game,
-        'genres': str(game.genres).split(':'),
-        'platforms': str(game.platforms).split(':'),
-        'screenshots': str(game.screenshots).split(':'),
+        'genres': str(game.genres).split(', '),
+        'platforms': str(game.platforms).split(', '),
+        'screenshots': str(game.screenshots).split(', '),
         'ratings': {
             'users': {
                 'rate': game.ratings_users,
-                'count': None
+                'count': game.ratings_users_count
             },
             'critics': {
                 'rate': game.ratings_critics,
-                'count': None
+                'count': game.ratings_critics_count
             },
         },
         'tweets': get_tweets(game)

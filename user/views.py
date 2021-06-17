@@ -1,7 +1,7 @@
-from django.shortcuts import render, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
+from django.shortcuts import render, HttpResponseRedirect
 from django.utils import timezone
 
 from .forms import LoginForm, SignUpForm
@@ -13,7 +13,6 @@ def log_in(request):
         form = LoginForm(request.POST)
         if form.is_valid():
             user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-            from django.contrib.auth import get_user_model
             if user is not None:
                 login(request, user)
                 return HttpResponseRedirect('/')
@@ -49,10 +48,9 @@ def sign_up(request):
 
 
 def log_out(request):
-    if request.method == 'GET':
-        if request.user.is_authenticated:
-            logout(request)
-            return HttpResponseRedirect('/')
+    if request.method == 'GET' and request.user.is_authenticated:
+        logout(request)
+        return HttpResponseRedirect('/')
 
 
 @login_required(login_url='/login')

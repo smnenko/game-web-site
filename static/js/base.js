@@ -4,7 +4,7 @@ window.onload = function () {
         let el = classes[item]
         el.onclick = function () {
             const url = el.getAttribute('url')
-            fetch('http://0.0.0.0:8000' + url, {
+            fetch('http://localhost:8000' + url, {
                 method: 'POST',
                 cache: 'no-cache'
             }).then((result) => {
