@@ -2,7 +2,7 @@ import math
 
 import requests
 from django.shortcuts import render
-from django.http import HttpResponseNotFound, HttpResponse
+from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
@@ -15,9 +15,10 @@ def get_tweets(game):
         url=twitter_data['url'] + '/tweets/search/recent',
         headers={'Authorization': 'Bearer ' + twitter_data['bearer']},
         params={
-            'query': '#' + ''.join([i for i in game.name if i.isalnum()]).lower(),
+            'query': '#'
+                     + ''.join(i for i in game.name if i.isalnum()).lower(),
             'tweet.fields': 'text,created_at,author_id',
-        }
+        },
     ).json()
 
     try:
@@ -50,7 +51,10 @@ def index(request, page=1):
         return render(request, 'games/index.html', context)
     elif request.method == 'GET':
         games = {}
-        items = Game.objects.all()[page * 6 - 6:page * 6]
+        game_list = Game.objects.all()
+        if not game_list:
+            return render(request, 'games/index.html')
+        items = game_list[page * 6 - 6:page * 6]
         for item in items:
             status = False
             if request.user.is_authenticated:
@@ -106,25 +110,26 @@ def game(request, game_id):
 
 
 def search(request):
-    if request.method == 'GET':
-        title = request.GET['title']
-        games = {}
-        items = Game.objects.filter(name__contains=title)
-        print(items)
-        for item in items:
-            if Musts.objects.filter(game=item, user=request.user).count() == 0:
-                status = False
-            else:
-                status = True
-            games[str(item.pk)] = {
-                'game': {
-                    'name': item.name,
-                    'logo': item.logo,
-                    'description': item.short_description
-                },
-                'status': status
-            }
-        return render(request, 'games/index.html', {'items': games})
+    if request.method != 'GET':
+        return HttpResponseBadRequest()
+    title = request.GET['title']
+    games = {}
+    items = Game.objects.filter(name__contains=title)
+    print(items)
+    for item in items:
+        if Musts.objects.filter(game=item, user=request.user).count() == 0:
+            status = False
+        else:
+            status = True
+        games[str(item.pk)] = {
+            'game': {
+                'name': item.name,
+                'logo': item.logo,
+                'description': item.short_description
+            },
+            'status': status
+        }
+    return render(request, 'games/index.html', {'items': games})
 
 
 @login_required(login_url='/login')

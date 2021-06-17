@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -129,5 +129,5 @@ AUTH_USER_MODEL = 'user.CustomUser'
 
 # Celery Configuration Options
 CELERY_TIMEZONE = TIME_ZONE
-CELERY_BROKER_URL = 'amqp://guest:guest@192.168.100.7:5672/%2F'
+CELERY_BROKER_URL = 'amqp://guest:guest@192.168.178.85:5672/%2F'
 CELERY_TASK_TRACK_STARTED = True

@@ -6,7 +6,7 @@ DATABASES = {
         'NAME': 'game-web-site',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': '192.168.100.7',
+        'HOST': '192.168.178.85',
         'PORT': '5432'
     }
 }
