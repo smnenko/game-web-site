@@ -21,5 +21,6 @@ twitter_data = {
     'url': 'https://api.twitter.com/2',
     'api-key': 'AZPDM9aI4xwF16gPwqGCGxHdM',
     'api-secret': 'lxhj1uzpprVrRiapBiGMD7p8pCMMQVlCIeHKfmZfS5teTZw6Q3',
-    'bearer': 'AAAAAAAAAAAAAAAAAAAAADtlNgEAAAAAtoygdnuL07x2YIVxhuoerfw5yxI%3DLjA7km6aqmjLhK8I2qEBrQxpZ9LQw0gA2I4Y0GWByJbVXSsStl'
+    'bearer': 'AAAAAAAAAAAAAAAAAAAAADtlNgEAAAAAtoygdnuL07x2YIVxhuoerfw5yxI'
+              '%3DLjA7km6aqmjLhK8I2qEBrQxpZ9LQw0gA2I4Y0GWByJbVXSsStl '
 }

@@ -18,7 +18,7 @@ app.autodiscover_tasks()
 
 
 @app.task(bind=True)
-def load_games_from_igdb(self):
+def load_games_from_igdb():
     management.call_command('load_games')
 
 
@@ -28,4 +28,3 @@ app.conf.beat_schedule = {
         'schedule': crontab(hour='6, 18'),
     }
 }
-

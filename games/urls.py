@@ -7,6 +7,6 @@ urlpatterns = [
     path('page/<int:page>', views.index),
     path('game/<int:game_id>', views.game),
     path('mymusts', views.musts),
-    path('must/<int:id>', views.must),
+    path('must/<int:game_id>', views.must),
     path('search', views.search)
 ]

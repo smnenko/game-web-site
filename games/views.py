@@ -10,13 +10,13 @@ from .models import Game, Musts
 from backend.secrets import twitter_data
 
 
-def get_tweets(game):
+def get_tweets(game_obj):
     tweets = requests.get(
         url=twitter_data['url'] + '/tweets/search/recent',
         headers={'Authorization': 'Bearer ' + twitter_data['bearer']},
         params={
             'query': '#'
-                     + ''.join(i for i in game.name if i.isalnum()).lower(),
+                     + ''.join(i for i in game_obj.name if i.isalnum()).lower(),
             'tweet.fields': 'text,created_at,author_id',
         },
     ).json()
@@ -87,24 +87,24 @@ def index(request, page=1):
 
 
 def game(request, game_id):
-    game = Game.objects.filter(pk=game_id)[0]
-    print(str(game.screenshots).split(':'))
+    game_obj = Game.objects.filter(pk=game_id)[0]
+    print(str(game_obj.screenshots).split(':'))
     context = {
-        'game': game,
-        'genres': str(game.genres).split(', '),
-        'platforms': str(game.platforms).split(', '),
-        'screenshots': str(game.screenshots).split(', '),
+        'game': game_obj.name,
+        'genres': str(game_obj.genres).split(', '),
+        'platforms': str(game_obj.platforms).split(', '),
+        'screenshots': str(game_obj.screenshots).split(', '),
         'ratings': {
             'users': {
-                'rate': game.ratings_users,
-                'count': game.ratings_users_count
+                'rate': game_obj.ratings_users,
+                'count': game_obj.ratings_users_count
             },
             'critics': {
-                'rate': game.ratings_critics,
-                'count': game.ratings_critics_count
+                'rate': game_obj.ratings_critics,
+                'count': game_obj.ratings_critics_count
             },
         },
-        'tweets': get_tweets(game)
+        'tweets': get_tweets(game_obj)
     }
     return render(request, 'games/game.html', context)
 
@@ -134,14 +134,14 @@ def search(request):
 
 @login_required(login_url='/login')
 @csrf_exempt
-def must(request, id):
+def must(request, game_id):
     if request.method == 'POST':
-        game = Game.objects.filter(id=id)[0]
-        must = Musts.objects.filter(game=game, user=request.user)
-        if must.count() == 0:
-            Musts(game=game, user=request.user).save()
+        game_obj = Game.objects.filter(id=game_id)[0]
+        must_obj = Musts.objects.filter(game=game_obj, user=request.user)
+        if must_obj.count() == 0:
+            Musts(game=game_obj, user=request.user).save()
         else:
-            must[0].delete()
+            must_obj[0].delete()
         return HttpResponse(status=200)
 
 

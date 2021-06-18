@@ -1,8 +1,7 @@
 import datetime
 
 import requests
-from django.core.management.base import BaseCommand, CommandError
-from django.db.utils import DataError
+from django.core.management.base import BaseCommand
 
 from backend.secrets import igdb_data
 
