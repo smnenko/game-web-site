@@ -1,28 +1,30 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>GameMuster - Log In</title>
+    <title>GameMuster - Log In</title>
 {% endblock %}
 
 {% block container %}
-<div class="font-weight-bold text-center" style="padding-top: 15%;">
-    <h2 class="font-weight-bold">Login</h2>
-    <form action="login" method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Log in" class="btn btn-danger text-light font-weight-bold" style="box-shadow: 0 0 10px red;">
-    </form>
+    <div class="font-weight-bold text-center" style="padding-top: 15%;">
+        <h2 class="font-weight-bold">Login</h2>
+        <form action="login" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Log in" class="btn btn-danger text-light font-weight-bold"
+                   style="box-shadow: 0 0 10px red;">
+        </form>
 
-    <style>
-        .form-input {
-    border: 0;
-    border-bottom: 2px solid black;
-    border-left: 2px solid black;
-}
-        .form-input:active, .form-input:hover, .form-input:focus {
-    outline: none;
-    outline-offset: none;
-}
-    </style>
-</div>
+        <style>
+            .form-input {
+                border: 0;
+                border-bottom: 2px solid black;
+                border-left: 2px solid black;
+            }
+
+            .form-input:active, .form-input:hover, .form-input:focus {
+                outline: none;
+                outline-offset: none;
+            }
+        </style>
+    </div>
 {% endblock %}

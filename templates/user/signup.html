@@ -1,17 +1,34 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>GameMusters - Sign up</title>
+    <title>GameMusters - Sign up</title>
 {% endblock %}
 
 {% block container %}
-<div class="font-weight-bold text-center" style="padding-top: 10%">
-    <h2 class="font-weight-bold">Sign Up</h2>
-    <form action="signup" method="POST" class="signup">
-        {% csrf_token %}
-        {{ form.as_p }}
-        {{ form.subject.errors }}
-        <input type="submit" value="Sign me up!" class="btn btn-login">
-    </form>
-</div>
+    <div class="font-weight-bold text-center" style="padding-top: 10%">
+        <h2 class="font-weight-bold">Sign Up</h2>
+        <form action="signup" method="POST" class="signup">
+            {% csrf_token %}
+            {% for field in form %}
+                <p class="row">
+                    <label for="{{ field.auto_id }}" class="col-5 text-right">{{ field.label }}</label>
+                    {{ field }}
+                </p>
+            {% endfor %}
+            {{ form.subject.errors }}
+            <input type="submit" value="Sign me up!" class="btn btn-danger" style="box-shadow: 0 0 10px red;">
+        </form>
+    </div>
+    <style>
+        .form-input {
+            border: 0;
+            border-bottom: 2px solid black;
+            border-left: 2px solid black;
+        }
+
+        .form-input:active, .form-input:hover, .form-input:focus {
+            outline: none;
+            outline-offset: none;
+        }
+    </style>
 {% endblock %}

@@ -31,3 +31,7 @@ class Game(models.Model):
 class Musts(models.Model):
     game = models.ForeignKey(to=Game, on_delete=models.CASCADE)
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Musts'
+        verbose_name_plural = 'Musts'

@@ -115,7 +115,6 @@ def search(request):
     title = request.GET['title']
     games = {}
     items = Game.objects.filter(name__contains=title)
-    print(items)
     for item in items:
         if Musts.objects.filter(game=item, user=request.user).count() == 0:
             status = False
@@ -147,8 +146,19 @@ def must(request, game_id):
 
 @login_required(login_url='/login')
 def musts(request):
-    if request.method == 'GET':
-        context = {
-            'games': Musts.objects.filter(user=request.user)
-        }
-        return render(request, 'games/musts.html', context)
+    if request.method != 'GET':
+        return
+    items = Musts.objects.filter(user=request.user)
+    games = {str(item.pk): {
+            'game': {
+                'id': item.game.id,
+                'name': item.game.name,
+                'logo': item.game.logo,
+                'genres': [i for i in item.game.genres.split(':')][:2],
+            },
+            'users_added': Musts.objects.filter(game=item.game).count(),
+        } for item in items}
+    context = {
+        'items': games
+    }
+    return render(request, 'games/musts.html', context)
