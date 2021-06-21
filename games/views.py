@@ -88,12 +88,13 @@ def index(request, page=1):
 
 def game(request, game_id):
     game_obj = Game.objects.filter(pk=game_id)[0]
-    print(str(game_obj.screenshots).split(':'))
+    must_obj = Musts.objects.filter(game=game_obj, user=request.user).get()
     context = {
+        'id': game_obj.id,
         'game': game_obj.name,
-        'genres': str(game_obj.genres).split(', '),
-        'platforms': str(game_obj.platforms).split(', '),
-        'screenshots': str(game_obj.screenshots).split(', '),
+        'genres': str(game_obj.genres).split(':'),
+        'platforms': str(game_obj.platforms).split(':'),
+        'screenshots': str(game_obj.screenshots).split(':'),
         'ratings': {
             'users': {
                 'rate': game_obj.ratings_users,
@@ -104,7 +105,8 @@ def game(request, game_id):
                 'count': game_obj.ratings_critics_count
             },
         },
-        'tweets': get_tweets(game_obj)
+        'tweets': get_tweets(game_obj),
+        'status': bool(must_obj)
     }
     return render(request, 'games/game.html', context)
 
