@@ -116,7 +116,7 @@ def search(request):
         return HttpResponseBadRequest()
     title = request.GET['title']
     games = {}
-    items = Game.objects.filter(name__contains=title)
+    items = Game.objects.filter(name__icontains=title)
     for item in items:
         if Musts.objects.filter(game=item, user=request.user).count() == 0:
             status = False
