@@ -8,15 +8,15 @@ from .managers import UserManager
 
 
 class Avatar(models.Model):
-    id = models.IntegerField(primary_key=True, unique=True)
-    avatar = models.ImageField(upload_to='users', default='media/users/default.jpg')
-    avatar_small = ImageSpecField(format='JPEG', source=avatar, processors=[
-        Adjust(contrast=1.2, sharpness=1.1), ResizeToFill(50, 50)
+    id = models.IntegerField(primary_key=True, unique=True, null=False, default='1')
+    avatar = models.ImageField(upload_to='users', default='users/default.jpg')
+    avatar_small = ImageSpecField(format='JPEG', source='avatar', processors=[
+        Adjust(contrast=1.2, sharpness=1.1), ResizeToFill(40, 40)
     ], options={'quality': 90})
-    avatar_medium = ImageSpecField(format='JPEG', source=avatar, processors=[
+    avatar_medium = ImageSpecField(format='JPEG', source='avatar', processors=[
         Adjust(contrast=1.2, sharpness=1.1), ResizeToFill(250, 250)
     ], options={'quality': 90})
-    avatar_large = ImageSpecField(format='JPEG', source=avatar, processors=[
+    avatar_large = ImageSpecField(format='JPEG', source='avatar', processors=[
         ResizeToFill(500, 500)
     ], options={'quality': 100})
     date_uploaded = models.DateField(default=timezone.now)

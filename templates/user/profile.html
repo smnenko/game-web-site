@@ -1,32 +1,36 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>GameMusters - {{ user }}</title>
+    <title>GameMusters - {{ user }}</title>
 {% endblock %}
 
 {% block container %}
-<div class="profile w-25 font-weight-bold">
-    <h2 class="font-weight-bold pl-5 pt-3">My Profile</h2>
-    <img src="{{ avatar.avatar }}" alt="">
-    <p class="row">
-        <span class="col-5 text-right text-secondary">Username</span>
-        <span class="col-7 border-left">{{ username }}</span>
-    </p>
-    <p class="row">
-        <span class="col-5 text-right text-secondary">Email</span>
-        <span class="col-7 border-left">{{ email }}</span>
-    </p>
-    <p class="row">
-        <span class="col-5 text-right text-secondary">First Name</span>
-        <span class="col-7 border-left">{{ first_name }}</span>
-    </p>
-    <p class="row">
-        <span class="col-5 text-right text-secondary">Last Name</span>
-        <span class="col-7 border-left">{{ last_name }}</span>
-    </p>
-    <p class="row">
-        <span class="col-5 text-right text-secondary">Age</span>
-        <span class="col-7 border-left">{{ age }}</span>
-    </p>
-</div>
+    <div class="profile w-50 font-weight-bold">
+        <h2 class="font-weight-bold pl-5 pt-3">My Profile</h2>
+        <div class="mt-4 ml-4">
+            <img src="{{ MEDIA_URL }}{{ avatar.avatar.url }}" alt="" class="rounded float-left">
+            <div class="float-left ml-4">
+                <p class="row">
+                    <span class="col-5 text-right text-secondary">Username</span>
+                    <span class="col-7 border-left">{{ username }}</span>
+                </p>
+                <p class="row">
+                    <span class="col-5 text-right text-secondary">Email</span>
+                    <span class="col-7 border-left">{{ email }}</span>
+                </p>
+                <p class="row">
+                    <span class="col-5 text-right text-secondary">First Name</span>
+                    <span class="col-7 border-left">{{ first_name }}</span>
+                </p>
+                <p class="row">
+                    <span class="col-5 text-right text-secondary">Last Name</span>
+                    <span class="col-7 border-left">{{ last_name }}</span>
+                </p>
+                <p class="row">
+                    <span class="col-5 text-right text-secondary">Age</span>
+                    <span class="col-7 border-left">{{ age }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
 {% endblock %}
