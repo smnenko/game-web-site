@@ -61,7 +61,8 @@ def profile(request):
         'email': user.email,
         'first_name': user.first_name,
         'last_name': user.last_name,
-        'age': timezone.now().year - user.birth_date.year
+        'age': timezone.now().year - user.birth_date.year,
+        'avatar': user.avatar
     }
     return render(request, 'user/profile.html', context=context)
 
