@@ -64,7 +64,3 @@ def profile(request):
         'age': timezone.now().year - user.birth_date.year
     }
     return render(request, 'user/profile.html', context=context)
-
-
-def mymusts(request):
-    pass

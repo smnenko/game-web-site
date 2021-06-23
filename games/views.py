@@ -88,7 +88,9 @@ def index(request, page=1):
 
 def game(request, game_id):
     game_obj = Game.objects.filter(pk=game_id)[0]
-    must_obj = Musts.objects.filter(game=game_obj, user=request.user).get()
+    must_obj = None
+    if request.user.is_authenticated:
+        must_obj = Musts.objects.filter(game=game_obj, user=request.user).get()
     context = {
         'id': game_obj.id,
         'game': game_obj.name,
