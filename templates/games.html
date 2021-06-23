@@ -11,14 +11,18 @@
                     </div>
                     <div class="col-12 position-absolute" style="bottom: 10px">
                         <a href="/game/{{ key }}" class="btn text-dark bg-light mx-1 rounded px-2 py-1">Open</a>
-                        {% if not item.status %}
-                            <button url="/must/{{ key }}" class="item btn text-dark bg-light mx-1 rounded px-2 py-1">
-                                Must
-                            </button>
-                        {% else %}
-                            <button url="/must/{{ key }}" class="item btn text-dark bg-light mx-1 rounded px-2 py-1">
-                                UnMust
-                            </button>
+                        {% if user.is_authenticated %}
+                            {% if not item.status %}
+                                <button url="/must/{{ key }}"
+                                        class="item btn text-dark bg-light mx-1 rounded px-2 py-1">
+                                    Must
+                                </button>
+                            {% else %}
+                                <button url="/must/{{ key }}"
+                                        class="item btn text-dark bg-light mx-1 rounded px-2 py-1">
+                                    UnMust
+                                </button>
+                            {% endif %}
                         {% endif %}
                     </div>
                 </div>
