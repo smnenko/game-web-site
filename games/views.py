@@ -3,7 +3,7 @@ import math
 import requests
 from django.shortcuts import render
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import Game, Musts
@@ -109,6 +109,12 @@ def game(request, game_id):
         'status': bool(must_obj)
     }
     return render(request, 'games/game.html', context)
+
+
+@permission_required('games.delete_game')
+def delete_game(request, game_id):
+    Game.objects.get(id=game_id).delete()
+    return render(request, 'games/delete_game.html')
 
 
 def search(request):
