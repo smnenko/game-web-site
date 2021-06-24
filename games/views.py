@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Game, Musts
 from backend.secrets import twitter_data
@@ -88,7 +89,10 @@ def index(request, page=1):
 
 def game(request, game_id):
     game_obj = Game.objects.filter(pk=game_id)[0]
-    must_obj = Musts.objects.filter(game=game_obj, user=request.user).get()
+    status = False
+    if request.user.is_authenticated and Musts.objects.filter(game=game_obj, user=request.user):
+        status = True
+
     context = {
         'id': game_obj.id,
         'game': game_obj.name,
@@ -106,8 +110,9 @@ def game(request, game_id):
             },
         },
         'tweets': get_tweets(game_obj),
-        'status': bool(must_obj)
+        'status': status
     }
+
     return render(request, 'games/game.html', context)
 
 
@@ -152,14 +157,14 @@ def musts(request):
         return
     items = Musts.objects.filter(user=request.user)
     games = {str(item.pk): {
-            'game': {
-                'id': item.game.id,
-                'name': item.game.name,
-                'logo': item.game.logo,
-                'genres': [i for i in item.game.genres.split(':')][:2],
-            },
-            'users_added': Musts.objects.filter(game=item.game).count(),
-        } for item in items}
+        'game': {
+            'id': item.game.id,
+            'name': item.game.name,
+            'logo': item.game.logo,
+            'genres': [i for i in item.game.genres.split(':')][:2],
+        },
+        'users_added': Musts.objects.filter(game=item.game).count(),
+    } for item in items}
     context = {
         'items': games
     }
