@@ -8,7 +8,6 @@ from .managers import UserManager
 
 
 class Avatar(models.Model):
-    id = models.IntegerField(primary_key=True, unique=True, null=False, default='1')
     avatar = models.ImageField(upload_to='users', default='users/default.jpg')
     avatar_small = ImageSpecField(format='JPEG', source='avatar', processors=[
         Adjust(contrast=1.2, sharpness=1.1), ResizeToFill(40, 40)

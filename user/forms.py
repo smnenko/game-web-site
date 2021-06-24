@@ -2,7 +2,13 @@ from django import forms
 from django.utils import timezone
 from django.contrib.auth.hashers import check_password
 
-BIRTH_YEAR_CHOICES = [i for i in range(timezone.now().year - 100, timezone.now().year + 1)]
+from .models import Avatar
+
+
+class UserSettingsForm(forms.ModelForm):
+    class Meta:
+        model = Avatar
+        fields = ('avatar',)
 
 
 class LoginForm(forms.Form):

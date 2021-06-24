@@ -1,11 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.utils import timezone
 
-from .forms import LoginForm, SignUpForm
-from .models import CustomUser
+from .forms import LoginForm, SignUpForm, UserSettingsForm
+from .models import CustomUser, Avatar
 
 
 def log_in(request):
@@ -55,16 +55,33 @@ def log_out(request):
 
 @login_required(login_url='/login')
 def profile(request):
-    user = CustomUser.objects.filter(username=request.user)[0]
-    context = {
-        'username': user.username,
-        'email': user.email,
-        'first_name': user.first_name,
-        'last_name': user.last_name,
-        'age': timezone.now().year - user.birth_date.year,
-        'avatar': user.avatar
-    }
-    return render(request, 'user/profile.html', context=context)
+    if request.method == 'GET':
+        user = CustomUser.objects.filter(username=request.user)[0]
+        form = UserSettingsForm()
+        context = {
+            'username': user.username,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'age': timezone.now().year - user.birth_date.year,
+            'avatar': user.avatar,
+            'form': form
+        }
+        return render(request, 'user/profile.html', context=context)
+
+
+@login_required(login_url='/login')
+def update_user(request):
+    if request.method == 'POST':
+        form = UserSettingsForm(request.POST, request.FILES)
+        user = CustomUser.objects.filter(username=request.user)[0]
+        if form.is_valid():
+            form.save()
+            user.avatar = form.instance
+            user.save()
+            return redirect(to='/profile')
+        print(form.is_valid(), form.cleaned_data['avatar'])
+    return HttpResponseBadRequest()
 
 
 def mymusts(request):
