@@ -24,7 +24,10 @@ class Command(BaseCommand):
         }
         game_list = requests.get(url='https://api.igdb.com/v4/games', headers=auth_data, params=params).json()
 
+        games = []
+
         for game in game_list:
+            # TODO need to be updated to dict with iteration by .keys()
             genres = []
             platforms = []
             screenshots = []
@@ -61,7 +64,7 @@ class Command(BaseCommand):
                 print(f"An error {e} was occurred: {game['name']} не содержит поля cover")
 
             try:
-                release_date = datetime.datetime.utcfromtimestamp(game['release_dates'][0]['date']).\
+                release_date = datetime.datetime.utcfromtimestamp(game['release_dates'][0]['date']). \
                     strftime('%B %Y')
             except KeyError as e:
                 print(f"An error {e} was occurred: {game['name']} не содержит поля release_date")
@@ -96,22 +99,27 @@ class Command(BaseCommand):
             except KeyError as e:
                 print(f"An error {e} was occurred: {game['name']} не содержит поля summary")
 
-            if game['id'] == Game.objects.filter(id=game['id']).count() != 0:
-                print(f"Database already consists {game['name']}")
+            game_db = Game.objects.filter(id=game['id'])
+            if game_db:
+                print(f'Game {game["id"]} already exists in database')
             else:
-                Game(
-                    id=game['id'],
-                    name=game['name'],
-                    logo=cover, genres=':'.join(genres),
-                    platforms=':'.join(platforms),
-                    screenshots=':'.join(screenshots),
-                    date_release=release_date,
-                    ratings_users=ratings_users,
-                    ratings_users_count=ratings_users_count,
-                    ratings_critics=ratings_critics,
-                    ratings_critics_count=ratings_critics_count,
-                    description=description,
-                    short_description=short_description,
-                ).save()
+                games.append(
+                    Game(
+                        id=game['id'],
+                        name=game['name'],
+                        logo=cover,
+                        genres=':'.join(genres),
+                        platforms=':'.join(platforms),
+                        screenshots=':'.join(screenshots),
+                        date_release=release_date,
+                        ratings_users=ratings_users,
+                        ratings_users_count=ratings_users_count,
+                        ratings_critics=ratings_critics,
+                        ratings_critics_count=ratings_critics_count,
+                        description=description,
+                        short_description=short_description,
+                    )
+                )
+        Game.objects.bulk_create(games)
 
         self.stdout.write(self.style.SUCCESS('Games successfully updated'))
