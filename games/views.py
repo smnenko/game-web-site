@@ -3,7 +3,9 @@ import math
 from django.shortcuts import render
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import ListView
 from django.db.models import Count
 
 from games.models import Game
@@ -115,12 +117,13 @@ def must(request, game_id):
         return HttpResponse(status=200)
 
 
-@login_required(login_url='/login')
-def musts(request):
-    if request.method != 'GET':
-        return
-    items = Musts.objects.filter(user=request.user).annotate(users_added=Count('game'))
-    games = {str(item.pk): {
+class MustsListView(LoginRequiredMixin, ListView):
+    model = Musts
+    template_name = 'games/musts.html'
+
+    def get(self, request, *args, **kwargs):
+        self.queryset = self.model.objects.filter(user=request.user).annotate(users_added=Count('game'))
+        games = {str(item.pk): {
             'game': {
                 'id': item.game.id,
                 'name': item.game.name,
@@ -128,8 +131,8 @@ def musts(request):
                 'genres': [i for i in item.game.genres.split(':')][:2],
             },
             'users_added': item.users_added,
-        } for item in items}
-    context = {
-        'items': games
-    }
-    return render(request, 'games/musts.html', context)
+        } for item in self.queryset}
+        context = {
+            'items': games
+        }
+        return render(request, self.template_name, context)
