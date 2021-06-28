@@ -28,8 +28,7 @@ def sign_up(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            username = CustomUser.objects.filter(username=form.cleaned_data['username'])
-            if not username:
+            if not CustomUser.objects.filter(username=form.cleaned_data['username']).exists():
                 user = CustomUser.objects.create_user(
                     username=form.cleaned_data['username'],
                     password=form.cleaned_data['password'],
@@ -55,7 +54,7 @@ def log_out(request):
 
 @login_required(login_url='/login')
 def profile(request):
-    user = CustomUser.objects.filter(username=request.user)[0]
+    user = CustomUser.objects.filter(username=request.user).first()
     context = {
         'username': user.username,
         'email': user.email,
