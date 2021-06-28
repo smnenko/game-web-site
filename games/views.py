@@ -28,7 +28,7 @@ def index(request, page=1):
         for item in items:
             status = False
             if request.user.is_authenticated:
-                if Musts.objects.filter(game=item, user=request.user).count() != 0:
+                if Musts.objects.filter(game=item, user=request.user).exists():
                     status = True
             games[str(item.pk)] = {
                 'game': {
