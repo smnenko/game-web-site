@@ -1,12 +1,11 @@
 from django.db import models
-from django.utils import timezone
 
 from user.models import CustomUser
 
 
 class Game(models.Model):
     id = models.IntegerField(primary_key=True, unique=True)
-    date_created = models.DateTimeField(default=timezone.now)
+    date_created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=128)
     short_description = models.CharField(max_length=128)
     logo = models.URLField()
@@ -24,8 +23,10 @@ class Game(models.Model):
         return self.name
 
     def __repr__(self):
-        return f'Game[{self.id}, {self.name}, {self.description[:32]}, {self.genres}, {self.date_release}, ' \
-               f'{self.date_created}'
+        return (
+            f'Game[{self.id}, {self.name}, {self.description[:32]}, {self.genres}, '
+            f'{self.date_release}, {self.date_created}'
+        )
 
 
 class Musts(models.Model):
