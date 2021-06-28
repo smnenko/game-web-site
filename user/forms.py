@@ -52,7 +52,6 @@ class SignUpForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(SignUpForm, self).clean()
-        cleaned_data = super(SignUpForm, self).clean()
         if str(cleaned_data['password']) != str(cleaned_data['confirm_password']):
             raise forms.ValidationError('Passwords don\'t match')
         return cleaned_data
