@@ -41,62 +41,62 @@ class Command(BaseCommand):
                 for genre in game['genres']:
                     genres.append(genre['name'])
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля genre")
+                print(f"An error {e} was occurred: {game['name']} doesn't contains field genre")
 
             try:
                 for platform in game['platforms']:
                     platforms.append(platform['name'])
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля platforms")
+                print(f"An error {e} was occurred: {game['name']} doesn't contains field platforms")
 
             try:
                 for screenshot in game['screenshots']:
                     screenshots.append(screenshot['url'])
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля screenshots")
+                print(f"An error {e} was occurred: {game['name']} doesn't contains field screenshots")
 
             try:
                 cover = game['cover']['url']
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля cover")
+                print(f"An error {e} was occurred: {game['name']} doesn't contains field cover")
 
             try:
                 release_date = datetime.datetime.utcfromtimestamp(game['release_dates'][0]['date']).\
                     strftime('%B %Y')
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля release_date")
+                print(f"An error {e} was occurred: {game['name']} doesn't contains field release_date")
 
             try:
                 ratings_users = f"{game['rating']}"
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля rating")
+                print(f"An error {e} was occurred: {game['name']} doesn't contains field rating")
 
             try:
                 ratings_users_count = f"{game['rating_count']}"
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля rating_count")
+                print(f"An error {e} was occurred: {game['name']} doesn't contains field rating_count")
 
             try:
                 ratings_critics = f"{game['aggregated_rating']}"
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля aggregated_rating")
+                print(f"An error {e} was occurred: {game['name']} doesn't contains field aggregated_rating")
 
             try:
                 ratings_critics_count = f"{game['aggregated_rating_count']}"
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля aggregated_rating_count")
+                print(f"An error {e} was occurred: {game['name']} doesn't contains field aggregated_rating_count")
 
             try:
                 short_description = game['storyline'][:128]
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля storyline")
+                print(f"An error {e} was occurred: {game['name']} doesn't contains field storyline")
 
             try:
                 description = game['summary']
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля summary")
+                print(f"An error {e} was occurred: {game['name']} doesn't contains field summary")
 
-            if game['id'] == Game.objects.filter(id=game['id']).count() != 0:
+            if Game.objects.filter(id=game['id']).exists():
                 print(f"Database already consists {game['name']}")
             else:
                 Game(
