@@ -4,9 +4,10 @@ from django.shortcuts import render
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import F, Value, BooleanField, Exists, Count
+from django.db.models import Count
 
-from .models import Game, Musts
+from games.models import Game
+from games.models import Musts
 from . import utils
 
 
