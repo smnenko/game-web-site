@@ -102,7 +102,8 @@ class Command(BaseCommand):
                 Game(
                     id=game['id'],
                     name=game['name'],
-                    logo=cover, genres=':'.join(genres),
+                    logo=cover,
+                    genres=':'.join(genres),
                     platforms=':'.join(platforms),
                     screenshots=':'.join(screenshots),
                     date_release=release_date,
