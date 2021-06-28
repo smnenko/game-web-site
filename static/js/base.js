@@ -9,7 +9,10 @@ window.onload = function () {
                 cache: 'no-cache'
             }).then((result) => {
                 if (result.status === 200) {
-                    el.textContent === 'Must' ? el.textContent = 'UnMust' : el.textContent = 'Must'
+                    if (el.textContent === 'UnMust')
+                        el.textContent = 'Must'
+                    else
+                        el.textContent = 'UnMust'
                 }
             })
         }

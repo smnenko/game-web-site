@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import F, Value, BooleanField, Exists
+from django.db.models import F, Value, BooleanField, Exists, Count
 
 from .models import Game, Musts
 from . import utils
@@ -118,7 +118,7 @@ def must(request, game_id):
 def musts(request):
     if request.method != 'GET':
         return
-    items = Musts.objects.filter(user=request.user)
+    items = Musts.objects.filter(user=request.user).annotate(users_added=Count('game'))
     games = {str(item.pk): {
             'game': {
                 'id': item.game.id,
@@ -126,7 +126,7 @@ def musts(request):
                 'logo': item.game.logo,
                 'genres': [i for i in item.game.genres.split(':')][:2],
             },
-            'users_added': Musts.objects.filter(game=item.game).count(),
+            'users_added': item.users_added,
         } for item in items}
     context = {
         'items': games
