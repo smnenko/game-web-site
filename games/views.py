@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponseNotFound, HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import F, Value, BooleanField, Exists
 
 from .models import Game, Musts
 from . import utils
@@ -86,19 +87,16 @@ def search(request):
         return HttpResponseBadRequest()
     title = request.GET['title']
     games = {}
-    items = Game.objects.filter(name__contains=title)
+    musts = Musts.objects.filter(user=request.user).values_list('game_id', flat=True)
+    items = Game.objects.filter(name__icontains=title)
     for item in items:
-        if Musts.objects.filter(game=item, user=request.user).count() == 0:
-            status = False
-        else:
-            status = True
         games[str(item.pk)] = {
             'game': {
                 'name': item.name,
                 'logo': item.logo,
                 'description': item.short_description
             },
-            'status': status
+            'status': item.id in musts
         }
     return render(request, 'games/index.html', {'items': games})
 
