@@ -1,7 +1,6 @@
 import math
 
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
