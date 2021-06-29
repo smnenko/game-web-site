@@ -120,19 +120,7 @@ def must(request, game_id):
 class MustsListView(LoginRequiredMixin, ListView):
     model = Musts
     template_name = 'games/musts.html'
+    context_object_name = 'musts'
 
-    def get(self, request, *args, **kwargs):
-        self.queryset = self.model.objects.filter(user=request.user).annotate(users_added=Count('game'))
-        games = {str(item.pk): {
-            'game': {
-                'id': item.game.id,
-                'name': item.game.name,
-                'logo': item.game.logo,
-                'genres': [i for i in item.game.genres.split(':')][:2],
-            },
-            'users_added': item.users_added,
-        } for item in self.queryset}
-        context = {
-            'items': games
-        }
-        return render(request, self.template_name, context)
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user).annotate(users_added=Count('game'))

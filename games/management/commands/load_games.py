@@ -12,6 +12,11 @@ class Command(BaseCommand):
     help = 'Updating games database'
 
     def handle(self, *args, **options):
+
+        def add_genre(name):
+            # TODO доделать
+            pass
+
         twitch_data = requests.post(url='https://id.twitch.tv/oauth2/token', data=igdb_data).json()
         auth_data = {
             'Client-ID': igdb_data['client_id'],
