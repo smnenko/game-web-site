@@ -1,5 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager
 
+from django.utils.timezone import now
+
 
 class UserManager(BaseUserManager):
 
@@ -16,7 +18,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('email', 'admin@gmail.com')
         extra_fields.setdefault('first_name', 'Administrator')
         extra_fields.setdefault('last_name', 'Administrator')
-        extra_fields.setdefault('birth_date', '2001-01-01')
+        extra_fields.setdefault('birth_date', now().date())
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
