@@ -10,13 +10,13 @@
                         {{ game.short_description}}
                     </div>
                     <div class="col-12 position-absolute" style="bottom: 10px">
-                        <a href="/game/{{ game.id }}" class="btn text-dark bg-light mx-1 rounded px-2 py-1">Open</a>
+                        <a href="/game/{{ game.id }}" class="btn text-dark bg-light mx-1 rounded px-2 py-1" style="width: 80px">Open</a>
                         {% if not game.status %}
-                            <button url="/must/{{ game.id }}" csrf_token="{{ csrf_token }}" class="item btn text-dark bg-light mx-1 rounded px-2 py-1">
+                            <button url="/must/{{ game.id }}" class="item btn text-dark bg-light mx-1 rounded px-2 py-1" style="width: 80px">
                                 Must
                             </button>
                         {% else %}
-                            <button url="/must/{{ game.id }}" csrf_token="{{ csrf_token }}" class="item btn text-dark bg-light mx-1 rounded px-2 py-1">
+                            <button url="/must/{{ game.id }}" class="item btn text-dark bg-light mx-1 rounded px-2 py-1" style="width: 80px">
                                 UnMust
                             </button>
                         {% endif %}
