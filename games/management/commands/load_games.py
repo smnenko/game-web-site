@@ -6,6 +6,9 @@ from django.core.management.base import BaseCommand
 from backend.secrets import igdb_data
 
 from games.models import Game
+from games.models import Genre
+from games.models import Platform
+from games.models import Screenshot
 
 
 class Command(BaseCommand):
@@ -13,9 +16,30 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        def add_genre(name):
-            # TODO доделать
-            pass
+        genres_to_create = []
+        platforms_to_create = []
+        screenshots_to_create = []
+
+        def add_genre(game_obj, name):
+            genre_ = Genre.objects.filter(name=name)
+            if genre_.exists():
+                game_obj.genres.add(genre_.first())
+            else:
+                genres_to_create.append(Genre(name=name))
+
+        def add_platform(game_obj, name):
+            platform_ = Platform.objects.filter(name=name)
+            if platform_.exists():
+                game_obj.platforms.add(platform_.first())
+            else:
+                platforms_to_create.append(Platform(name=name))
+
+        def add_screenshot(game_obj, url):
+            screenshot_ = Screenshot.objects.filter(url=url)
+            if screenshot_.exists():
+                game_obj.screenshots.add(screenshot_.first())
+            else:
+                screenshots_to_create.append(Screenshot(url=url))
 
         twitch_data = requests.post(url='https://id.twitch.tv/oauth2/token', data=igdb_data).json()
         auth_data = {
