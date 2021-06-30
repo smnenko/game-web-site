@@ -16,30 +16,39 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        genres_to_create = []
-        platforms_to_create = []
-        screenshots_to_create = []
-
-        def add_genre(game_obj, name):
+        def add_genre(game_obj:Game, name):
             genre_ = Genre.objects.filter(name=name)
             if genre_.exists():
-                game_obj.genres.add(genre_.first())
+                genre_ = genre_.first()
+            elif name:
+                genre_ = Genre.objects.create(name=name)
             else:
-                genres_to_create.append(Genre(name=name))
+                return
+
+            if not game_obj.genres.filter(id=genre_.id).exists():
+                game_obj.genres.add(genre_)
 
         def add_platform(game_obj, name):
             platform_ = Platform.objects.filter(name=name)
             if platform_.exists():
-                game_obj.platforms.add(platform_.first())
+                platform_ = platform_.first()
+            elif name:
+                platform_ = Platform.objects.create(name=name)
             else:
-                platforms_to_create.append(Platform(name=name))
+                return
+            if not game_obj.platforms.filter(id=platform_.id).exists():
+                game_obj.platforms.add(platform_)
 
         def add_screenshot(game_obj, url):
             screenshot_ = Screenshot.objects.filter(url=url)
             if screenshot_.exists():
-                game_obj.screenshots.add(screenshot_.first())
+                screenshot_ = screenshot_.first()
+            elif url:
+                screenshot_ = Screenshot.objects.create(url=url)
             else:
-                screenshots_to_create.append(Screenshot(url=url))
+                return
+            if not game_obj.screenshots.filter(id=screenshot_.id).exists():
+                game_obj.screenshots.add(screenshot_)
 
         twitch_data = requests.post(url='https://id.twitch.tv/oauth2/token', data=igdb_data).json()
         auth_data = {
@@ -54,9 +63,6 @@ class Command(BaseCommand):
         game_list = requests.get(url='https://api.igdb.com/v4/games', headers=auth_data, params=params).json()
 
         for game in game_list:
-            genres = []
-            platforms = []
-            screenshots = []
             cover = 'https://www.tryngo.ch/img/no-img.jpg'
             release_date = ''
             ratings_users = ''
@@ -67,73 +73,55 @@ class Command(BaseCommand):
             description = ''
 
             try:
-                for genre in game['genres']:
-                    genres.append(genre['name'])
-            except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля genre")
-
-            try:
-                for platform in game['platforms']:
-                    platforms.append(platform['name'])
-            except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля platforms")
-
-            try:
-                for screenshot in game['screenshots']:
-                    screenshots.append(screenshot['url'])
-            except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля screenshots")
-
-            try:
                 cover = game['cover']['url']
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля cover")
+                print(f"An error {e.__class__.__name__} was occurred: {game['name']} не содержит поля cover")
 
             try:
-                release_date = datetime.datetime.utcfromtimestamp(game['release_dates'][0]['date']).\
+                release_date = datetime.datetime.utcfromtimestamp(game['release_dates'][0]['date']). \
                     strftime('%B %Y')
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля release_date")
+                print(f"An error {e.__class__.__name__} was occurred: {game['name']} не содержит поля release_date")
 
             try:
                 ratings_users = f"{game['rating']}"
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля rating")
+                print(f"An error {e.__class__.__name__} was occurred: {game['name']} не содержит поля rating")
 
             try:
                 ratings_users_count = f"{game['rating_count']}"
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля rating_count")
+                print(f"An error {e.__class__.__name__} was occurred: {game['name']} не содержит поля rating_count")
 
             try:
                 ratings_critics = f"{game['aggregated_rating']}"
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля aggregated_rating")
+                print(
+                    f"An error {e.__class__.__name__} was occurred: {game['name']} не содержит поля aggregated_rating")
 
             try:
                 ratings_critics_count = f"{game['aggregated_rating_count']}"
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля aggregated_rating_count")
+                print(
+                    f"An error {e.__class__.__name__} was occurred: {game['name']} не содержит поля aggregated_rating_count")
 
             try:
                 short_description = game['storyline'][:128]
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля storyline")
+                print(f"An error {e.__class__.__name__} was occurred: {game['name']} не содержит поля storyline")
 
             try:
                 description = game['summary']
             except KeyError as e:
-                print(f"An error {e} was occurred: {game['name']} не содержит поля summary")
+                print(f"An error {e.__class__.__name__} was occurred: {game['name']} не содержит поля summary")
 
-            if game['id'] == Game.objects.filter(id=game['id']).count() != 0:
+            if Game.objects.filter(id=game['id']).exists():
                 print(f"Database already consists {game['name']}")
             else:
-                Game(
+                game_obj = Game.objects.create(
                     id=game['id'],
                     name=game['name'],
-                    logo=cover, genres=':'.join(genres),
-                    platforms=':'.join(platforms),
-                    screenshots=':'.join(screenshots),
+                    logo=cover,
                     date_release=release_date,
                     ratings_users=ratings_users,
                     ratings_users_count=ratings_users_count,
@@ -141,6 +129,24 @@ class Command(BaseCommand):
                     ratings_critics_count=ratings_critics_count,
                     description=description,
                     short_description=short_description,
-                ).save()
+                )
+
+                try:
+                    for genre in game['genres']:
+                        add_genre(game_obj, genre['name'])
+                except KeyError as e:
+                    print(f"An error {e.__class__.__name__} was occurred: {game['name']} не содержит поля genre")
+
+                try:
+                    for platform in game['platforms']:
+                        add_platform(game_obj, platform['name'])
+                except KeyError as e:
+                    print(f"An error {e.__class__.__name__} was occurred: {game['name']} не содержит поля platforms")
+
+                try:
+                    for screenshot in game['screenshots']:
+                        add_screenshot(game_obj, screenshot['url'])
+                except KeyError as e:
+                    print(f"An error {e.__class__.__name__} was occurred: {game['name']} не содержит поля screenshots")
 
         self.stdout.write(self.style.SUCCESS('Games successfully updated'))

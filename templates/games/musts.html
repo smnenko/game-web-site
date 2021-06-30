@@ -12,7 +12,7 @@
                 <div class="col-2 h-50 m-0 mb-4">
                     <img src="{{ must.game.logo }}" class="rounded" style="width: 80%; height: 80%" alt="">
                     <h4>{{ must.game.name }}</h4>
-                    {% for genre in must.game.genres %}
+                    {% for genre in must.game.genres.all %}
                         <span>{{ genre }} </span>
                     {% endfor %}
                     <p>Users added: {{ must.users_added }}</p>

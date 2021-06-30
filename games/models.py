@@ -1,11 +1,12 @@
 from django.db import models
+from django.utils.timezone import now
 
 from user.models import CustomUser
 
 
 class AbstractModel(models.Model):
-    id = models.IntegerField(primary_key=True, unique=True)
-    date_created = models.DateTimeField(auto_now_add=True)
+    id = models.AutoField(primary_key=True, unique=True)
+    date_created = models.DateTimeField(default=now)
 
     class Meta:
         abstract = True
@@ -13,6 +14,9 @@ class AbstractModel(models.Model):
 
 class Genre(AbstractModel):
     name = models.CharField(max_length=128)
+
+    def __str__(self):
+        return self.name
 
     def __repr__(self):
         return f'{self.__class__.__name__}[{self.id}, {self.name}, {self.date_created}]'
@@ -28,12 +32,14 @@ class Screenshot(AbstractModel):
 class Platform(AbstractModel):
     name = models.CharField(max_length=128)
 
+    def __str__(self):
+        return self.name
+
     def __repr__(self):
         return f'{self.__class__.__name__}[{self.id}, {self.name}, {self.date_created}]'
 
 
 class Game(AbstractModel):
-    id = models.IntegerField(primary_key=True, unique=True)
     name = models.CharField(max_length=128)
     short_description = models.CharField(max_length=128)
     logo = models.URLField()
