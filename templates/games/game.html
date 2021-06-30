@@ -1,104 +1,110 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title>GameMuster - {{ game.name }}</title>
+    <title>GameMuster - {{ game.name }}</title>
 {% endblock %}
 
 {% block container %}
-<div class="row">
-    <div class="col-9">
-        <div class="col-12 d-flex justify-content-start align-middle mt-3">
-            <h2 class="text-uppercase font-weight-bold mr-2">{{ game }}</h2>
-            {% if status %}
-                <h3 class="item btn btn-danger text-uppercase font-weight-bold px-2 py-1 rounded text-light" style="box-shadow: 0 0 10px red;" url="/must/{{ game.id }}">unMust</h3>
-            {% else %}
-                <h3 class="item btn btn-danger text-uppercase font-weight-bold px-2 py-1 rounded text-light" style="box-shadow: 0 0 10px red;" url="/must/{{ game.id }}">Must</h3>
-            {% endif %}
-        </div>
-        <div class="col-12">{{ game.short_description }}</div>
-        <div class="row">
-            <div class="col-9">
-                <div class="col-12">
-                    <h5 class="font-weight-bold">Description</h5>
-                </div>
-                <div class="col-12">{{ game.description }}</div>
-                <div class="col-12">
-                    <h5 class="font-weight-bold">Release Date</h5>
-                </div>
-                <div class="col-12">{{ game.date_release }}</div>
-                <div class="col-12">
-                    <h5 class="font-weight-bold">Screenshots</h5>
-                </div>
-                <div class="row m-0">
-                    {% for screenshot in screenshots %}
-                    <div class="col-4">
-                        <img src="{{ screenshot }}" alt="" height="250" width="250" class="m-2">
+    <div class="row">
+        <div class="col-9">
+            <div class="col-12 d-flex justify-content-start align-middle mt-3">
+                <h2 class="text-uppercase font-weight-bold mr-2">{{ game.name }}</h2>
+                {% if game.status %}
+                    <h3 class="item btn btn-danger text-uppercase font-weight-bold px-2 py-1 rounded text-light"
+                        style="box-shadow: 0 0 10px red;" url="/must/{{ game.id }}">unMust</h3>
+                {% else %}
+                    <h3 class="item btn btn-danger text-uppercase font-weight-bold px-2 py-1 rounded text-light"
+                        style="box-shadow: 0 0 10px red;" url="/must/{{ game.id }}">Must</h3>
+                {% endif %}
+            </div>
+            <div class="col-12">{{ game.short_description }}</div>
+            <div class="row">
+                <div class="col-9">
+                    <div class="col-12">
+                        <h5 class="font-weight-bold">Description</h5>
                     </div>
+                    <div class="col-12">{{ game.description }}</div>
+                    <div class="col-12">
+                        <h5 class="font-weight-bold">Release Date</h5>
+                    </div>
+                    <div class="col-12">{{ game.date_release }}</div>
+                    <div class="col-12">
+                        <h5 class="font-weight-bold">Screenshots</h5>
+                    </div>
+                    <div class="row m-0">
+                        {% for screenshot in game.screenshots.all %}
+                            <div class="col-4">
+                                <img src="{{ screenshot.url }}" alt="" height="250" width="250" class="m-2">
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="font-weight-bold">Ratings</h5>
+                            <div class="col-12">
+                                <div class="row font-weight-bold">
+                                    <div class="col-12 d-inline-flex justify-content-between bg-success text-light p-2 mt-1 rounded"
+                                         style="box-shadow: 0 0 10px green;">
+                                        <div>
+                                            Users
+                                        </div>
+                                        <div>
+                                            {{ game.ratings_users|floatformat:1 }}({{ game.ratings_users_count }} reviews)
+                                        </div>
+                                    </div>
+                                    <div class="col-12 d-inline-flex justify-content-between text-light p-2 mt-2 rounded"
+                                         style="background-color: orange;box-shadow: 0 0 10px orange;">
+                                        <div>
+                                            Critics
+                                        </div>
+                                        <div>
+                                            {{ game.ratings_critics|floatformat:1 }}({{ game.ratings_critics_count }} reviews)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <h5 class="font-weight-bold">Genres</h5>
+                            <div class="d-flex justify-content-start">
+                                {% for genre in game.genres.all %}
+                                    <div class="col-3 font-weight-bold px-2 py-1 bg-danger text-light m-1"
+                                         style="box-shadow: 0 0 10px red;">{{ genre }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <h5 class="font-weight-bold">Platforms</h5>
+                            <div class="d-flex justify-content-start">
+                                {% for platform in game.platforms.all %}
+                                    <div class="col-3 font-weight-bold  px-2 py-1 bg-danger text-light m-1"
+                                         style="box-shadow: 0 0 10px red;">{{ platform }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <h2 class="font-weight-bold">#{{ game.name }} Tweets</h2>
+            {% if tweets.message %}
+                <p>{{ tweets.message }}</p>
+            {% else %}
+                <div class="row">
+                    {% for tweet in tweets %}
+                        <div class="col-12 d-block bg-danger text-light p-1 mb-1 rounded">
+                            <div class="">{{ tweet.text }}</div>
+                            <div class="d-flex justify-content-between">
+                                <span>{{ tweet.created_at }}</span>
+                                <span>@{{ tweet.author_id }}</span>
+                            </div>
+                        </div>
                     {% endfor %}
                 </div>
-            </div>
-            <div class="col-3">
-                <div class="row">
-                    <div class="col-12">
-                        <h5 class="font-weight-bold">Ratings</h5>
-                        <div class="col-12">
-                            <div class="row font-weight-bold">
-                                <div class="col-12 d-inline-flex justify-content-between bg-success text-light p-2 mt-1 rounded" style="box-shadow: 0 0 10px green;">
-                                    <div>
-                                        Users
-                                    </div>
-                                    <div>
-                                        {{ ratings.users.rate }}({{ ratings.users.count }} reviews)
-                                    </div>
-                                </div>
-                                <div class="col-12 d-inline-flex justify-content-between text-light p-2 mt-2 rounded" style="background-color: orange;box-shadow: 0 0 10px orange;">
-                                    <div>
-                                        Critics
-                                    </div>
-                                    <div>
-                                        {{ ratings.critics.rate }}({{ ratings.critics.count }} reviews)
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <h5 class="font-weight-bold">Genres</h5>
-                        <div class="d-flex justify-content-start">
-                                {% for genre in genres %}
-                                    <div class="col-3 font-weight-bold px-2 py-1 bg-danger text-light m-1" style="box-shadow: 0 0 10px red;">{{ genre }}</div>
-                                {% endfor %}
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <h5 class="font-weight-bold">Platforms</h5>
-                            <div class="d-flex justify-content-start">
-                                {% for platform in platforms %}
-                                <div class="col-3 font-weight-bold  px-2 py-1 bg-danger text-light m-1" style="box-shadow: 0 0 10px red;">{{ platform }}</div>
-                                {% endfor %}
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-3">
-        <h2 class="font-weight-bold">#{{ game.name }} Tweets</h2>
-        {% if tweets.message %}
-        <p>{{ tweets.message }}</p>
-        {% else %}
-        <div class="row">
-            {% for tweet in tweets %}
-            <div class="col-12 d-block bg-danger text-light p-1 mb-1 rounded">
-                <div class="">{{ tweet.text }}</div>
-                <div class="d-flex justify-content-between">
-                    <span>{{ tweet.created_at }}</span>
-                    <span>@{{ tweet.author_id }}</span>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
             {% endif %}
+        </div>
     </div>
-</div>
 {% endblock %}
