@@ -52,7 +52,7 @@ class GameListView(ListView):
         self.game_obj = self.model.objects.filter(id=self.kwargs['game_id'])
         status = False
         if self.request.user.is_authenticated:
-            status = Musts.objects.filter(game=self.game_obj[0], user=self.request.user).exists()
+            status = Musts.objects.filter(game=self.game_obj.first(), user=self.request.user).exists()
         return self.game_obj.annotate(status=Value(status, output_field=BooleanField())).first()
 
     def get_context_data(self, *, object_list=None, **kwargs):
