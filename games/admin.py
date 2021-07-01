@@ -26,14 +26,14 @@ class MustsAdmin(admin.ModelAdmin):
 
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
-    list_display = ['name', 'date_created']
+    list_display = ['name', 'date_created', 'id']
 
 
 @admin.register(Platform)
 class PlatformAdmin(admin.ModelAdmin):
-    list_display = ['name', 'date_created']
+    list_display = ['name', 'date_created', 'id']
 
 
 @admin.register(Screenshot)
 class ScreenshotAdmin(admin.ModelAdmin):
-    list_display = ['url', 'date_created']
+    list_display = ['url', 'date_created', 'id']
