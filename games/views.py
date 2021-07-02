@@ -17,11 +17,10 @@ class IndexListView(ListView):
     model = Game
     template_name = 'games/index.html'
     context_object_name = 'games'
-    pages = []
     paginate_by = 6
 
     def get_queryset(self):
-        games = self.model.objects.all()
+        games = self.model.objects.get_queryset().order_by('id')
         if not games:
             return
         if self.request.user.is_authenticated:
@@ -56,7 +55,7 @@ class GameListView(ListView):
 class SearchListView(ListView):
     model = Game
     template_name = 'games/index.html'
-    context_object_name = 'games'
+    context_object_name = 'page_obj'
 
     def get_queryset(self):
         musts = []
@@ -64,7 +63,7 @@ class SearchListView(ListView):
             musts = Musts.objects.filter(user=self.request.user).values_list('game_id', flat=True)
         return self.model.objects.filter(name__icontains=self.request.GET['title']).annotate(status=Case(
             When(id__in=musts, then=Value(True)), default=Value(False), output_field=BooleanField()
-        ))
+        )).order_by('id')
 
 
 @method_decorator(csrf_exempt, name='dispatch')
