@@ -15,9 +15,9 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, username, password, **extra_fields):
-        extra_fields.setdefault('email', 'admin@gmail.com')
-        extra_fields.setdefault('first_name', 'Administrator')
-        extra_fields.setdefault('last_name', 'Administrator')
+        extra_fields.setdefault('email', '')
+        extra_fields.setdefault('first_name', '')
+        extra_fields.setdefault('last_name', '')
         extra_fields.setdefault('birth_date', now().date())
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
