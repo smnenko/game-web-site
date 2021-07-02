@@ -18,13 +18,10 @@ class IndexListView(ListView):
     template_name = 'games/index.html'
     context_object_name = 'games'
     pages = []
+    paginate_by = 6
 
     def get_queryset(self):
         games = self.model.objects.all()
-        page = 1 if 'page' not in self.kwargs.keys() else self.kwargs['page']
-        total_pages = [i for i in range(1, math.ceil(self.model.objects.count() / 6) + 1)]
-        self.pages = total_pages[
-                     page - 6 if page > 6 else 0: page + 6 if page < len(total_pages) - 6 else len(total_pages)]
         if not games:
             return
         if self.request.user.is_authenticated:
@@ -33,13 +30,7 @@ class IndexListView(ListView):
             musts = []
         return games.annotate(
             status=Case(When(id__in=musts, then=Value(True)), default=Value(False), output_field=BooleanField())
-        )[page * 6 - 6:page * 6]
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context[self.context_object_name] = self.get_queryset()
-        context['pages'] = self.pages
-        return context
+        )
 
 
 class GameListView(ListView):

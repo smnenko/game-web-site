@@ -1,5 +1,5 @@
 <div class="row m-0 w-100 h-100">
-    {% for game in games %}
+    {% for game in page_obj %}
         <div class="col-4 w-25 h-50 container position-relative py-4">
             <img src="{{ game.logo }}" alt="" width="100%" height="100%">
             <div class="position-relative h-50 w-100 bg-dark" style="opacity: 95%; bottom: 50%">
