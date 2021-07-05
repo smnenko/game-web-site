@@ -1,6 +1,4 @@
 from django import forms
-from django.utils import timezone
-from django.contrib.auth.hashers import check_password
 
 from .models import Avatar
 
@@ -57,7 +55,6 @@ class SignUpForm(forms.Form):
     )
 
     def clean(self):
-        cleaned_data = super(SignUpForm, self).clean()
         cleaned_data = super(SignUpForm, self).clean()
         if str(cleaned_data['password']) != str(cleaned_data['confirm_password']):
             raise forms.ValidationError('Passwords don\'t match')
