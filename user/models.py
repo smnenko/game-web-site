@@ -1,5 +1,3 @@
-from datetime import date
-
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
@@ -9,7 +7,7 @@ from .managers import UserManager
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(unique=True, max_length=16)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, null=True)
     first_name = models.CharField(max_length=64, null=True)
     last_name = models.CharField(max_length=64, null=True)
     birth_date = models.DateField(auto_now=False, null=True)
