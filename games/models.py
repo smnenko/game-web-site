@@ -13,7 +13,7 @@ class AbstractModel(models.Model):
 
 
 class Genre(AbstractModel):
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
         return self.name
@@ -23,14 +23,14 @@ class Genre(AbstractModel):
 
 
 class Screenshot(AbstractModel):
-    url = models.URLField()
+    url = models.URLField(unique=True)
 
     def __repr__(self):
         return f'{self.__class__.__name__}[{self.id}, {self.url}, {self.date_created}]'
 
 
 class Platform(AbstractModel):
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
         return self.name

@@ -6,6 +6,7 @@ from backend.secrets import igdb_data
 from games.models import Game
 from .utils import create_game_dict
 from .utils import update_game_gps
+from .utils import delete_exists_elements
 
 
 class Command(BaseCommand):
@@ -53,6 +54,14 @@ class Command(BaseCommand):
                     description=game_dict['description'],
                     short_description=game_dict['short_description'],
                 )
-                update_game_gps(game_obj, game)
+                genres, platforms, screenshots = update_game_gps(game)
+
+                for list_ in delete_exists_elements(genres, platforms, screenshots):
+                    if list_:
+                        type(list_[0]).objects.bulk_create(list_)
+
+                game_obj.genres.set(genres)
+                game_obj.platforms.set(platforms)
+                game_obj.screenshots.set(screenshots)
 
         self.stdout.write(self.style.SUCCESS('Games successfully updated'))
