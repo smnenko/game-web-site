@@ -2,6 +2,7 @@ import math
 
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import permission_required
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
 from django.views.generic.base import View
@@ -33,6 +34,7 @@ class IndexListView(ListView):
         )
 
 
+@method_decorator(permission_required('games.view_game'), name='dispatch')
 class GameListView(ListView):
     model = Game
     template_name = 'games/game.html'
@@ -68,6 +70,8 @@ class SearchListView(ListView):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(permission_required('games.add_musts'), name='dispatch')
+@method_decorator(permission_required('games.delete_musts'), name='dispatch')
 class MustView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
@@ -80,6 +84,7 @@ class MustView(LoginRequiredMixin, View):
         return HttpResponse(status=200)
 
 
+@method_decorator(permission_required('games.view_musts'), name='dispatch')
 class MustsListView(LoginRequiredMixin, ListView):
     model = Musts
     template_name = 'games/musts.html'
