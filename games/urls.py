@@ -10,5 +10,5 @@ urlpatterns = [
     path('mymusts', views.MustsListView.as_view()),
     path('must/<int:game_id>', views.MustView.as_view()),
     path('search', views.SearchListView.as_view()),
-    path('delete/<int:game_id>', views.DeleteView.as_view()),
+    path('delete_game/<int:game_id>', views.GameDeleteView.as_view()),
 ]
