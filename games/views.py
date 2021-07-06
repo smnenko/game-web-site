@@ -35,6 +35,7 @@ class IndexListView(ListView):
         )
 
 
+@method_decorator(permission_required('games.view_game'), name='dispatch')
 class GameListView(ListView):
     model = Game
     template_name = 'games/game.html'
@@ -70,6 +71,8 @@ class SearchListView(ListView):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(permission_required('games.add_musts'), name='dispatch')
+@method_decorator(permission_required('games.delete_musts'), name='dispatch')
 class MustView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
@@ -82,6 +85,7 @@ class MustView(LoginRequiredMixin, View):
         return HttpResponse(status=200)
 
 
+@method_decorator(permission_required('games.view_musts'), name='dispatch')
 @method_decorator(permission_required('games.delete_game'), name='dispatch')
 class GameDeleteView(DeleteView):
     model = Game
