@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import permission_required
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
 from django.views.generic.base import View
+from django.views.generic.edit import DeleteView
 from django.db.models import Count, Case, When, Value, BooleanField
 from django.utils.decorators import method_decorator
 
@@ -85,6 +86,13 @@ class MustView(LoginRequiredMixin, View):
 
 
 @method_decorator(permission_required('games.view_musts'), name='dispatch')
+@method_decorator(permission_required('games.delete_game'), name='dispatch')
+class GameDeleteView(DeleteView):
+    model = Game
+    success_url = '/'
+    pk_url_kwarg = 'game_id'
+
+
 class MustsListView(LoginRequiredMixin, ListView):
     model = Musts
     template_name = 'games/musts.html'
