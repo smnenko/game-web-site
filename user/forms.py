@@ -1,5 +1,13 @@
 from django import forms
 
+from .models import Avatar
+
+
+class UserSettingsForm(forms.ModelForm):
+    class Meta:
+        model = Avatar
+        fields = ('avatar',)
+
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -17,7 +25,7 @@ class SignUpForm(forms.Form):
     username = forms.CharField(
         max_length=16,
         required=True,
-        widget=forms.TextInput({'placeholder': 'Enter username here...', 'class': 'form-input col-3'})
+        widget=forms.TextInput({'placeholder': 'Enter username here...', 'class': 'form-input col-3'}),
     )
     email = forms.EmailField(
         required=True,
