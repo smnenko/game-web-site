@@ -6,3 +6,4 @@
 media/CACHE
 media/users
 !media/users/default.jpg
+.env
