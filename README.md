@@ -1,5 +1,23 @@
 # GameMuster(game-web-site)
 GameMuster is a web application that parse games and tweets from IGDB and Twitter.
+### Installation
+Create empty django-application and get **SECRET_KEY** from it
+Clone repo from github using **git**
+```
+git clone https://github.com/smnenko/game-web-site.git
+```
+Configure python virtual environment (good practice) and run next command from root directory
+```
+pip install -r requirements.txt
+```
+Go to **.env** file and fill all fields
+Run next commands in root directory (use python3 on linux os)
+```
+python manage.py migrate
+python manage.py loaddata initial.json
+python manage.py runserver
+```
+Go to *https://localhost:8000/* and be fine =)
 ### Screenshots
 * Main page
 ![Main](https://github.com/smnenko/game-web-site/blob/master/docs/images/Main%20page.PNG?raw=true)
