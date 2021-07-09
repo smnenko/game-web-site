@@ -3,3 +3,6 @@
 /__pycache__/
 .idea/
 **/__pycache__
+media/CACHE
+media/users
+!media/users/default.jpg

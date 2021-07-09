@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # third-party apps
+    'imagekit',
     # project apps
     'games',
     'user'
@@ -123,6 +124,12 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = BASE_DIR / 'static_root'
+
+# Media
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 
 # Set custom user model
 AUTH_USER_MODEL = 'user.CustomUser'

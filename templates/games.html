@@ -2,6 +2,10 @@
     {% for game in page_obj %}
         <div class="col-4 w-25 h-50 container position-relative py-4">
             <img src="{{ game.logo }}" alt="" width="100%" height="100%">
+            {% if perms.games.delete_game %}
+                <a href="/delete_game/{{ game.id }}" target="_blank" class="delete-game btn btn-danger position-absolute mt-4 mr-3"
+                   style="top: 0; right: 0">&#10006;</a>
+            {% endif %}
             <div class="position-relative h-50 w-100 bg-dark" style="opacity: 95%; bottom: 50%">
                 <div class="row w-100 h-100 text-light m-0">
                     <div class="col-12 text-transform-uppercase font-weight-bold"
@@ -11,6 +15,7 @@
                     </div>
                     <div class="col-12 position-absolute" style="bottom: 10px">
                         <a href="/game/{{ game.id }}" class="btn text-dark bg-light mx-1 rounded px-2 py-1" style="width: 80px">Open</a>
+                    {% if user.is_authenticated %}
                         {% if not game.status %}
                             <button url="/must/{{ game.id }}" class="item btn text-dark bg-light mx-1 rounded px-2 py-1" style="width: 80px">
                                 Must
@@ -20,9 +25,19 @@
                                 UnMust
                             </button>
                         {% endif %}
+                    {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     {% endfor %}
+    <style>
+        .delete-game {
+            opacity: 30%;
+        }
+        .delete-game:hover {
+            opacity: 100%;
+            transition: opacity .3s;
+        }
+    </style>
 </div>
