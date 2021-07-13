@@ -19,7 +19,6 @@ class IndexListView(ListView):
     model = Game
     template_name = 'games/index.html'
     context_object_name = 'games'
-    pages = []
     paginate_by = 6
 
     def get_queryset(self):
@@ -59,7 +58,7 @@ class GameListView(ListView):
 class SearchListView(ListView):
     model = Game
     template_name = 'games/index.html'
-    context_object_name = 'games'
+    context_object_name = 'page_obj'
 
     def get_queryset(self):
         musts = []

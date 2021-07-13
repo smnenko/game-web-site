@@ -4,7 +4,7 @@ window.onload = function () {
         let el = classes[item]
         el.onclick = function () {
             const url = el.getAttribute('url')
-            fetch('http://localhost:8000' + url, {
+            fetch(document.location.origin + url, {
                 method: 'POST',
                 cache: 'no-cache'
             }).then((result) => {
@@ -23,7 +23,7 @@ window.onload = function () {
         let el = musts[must]
         el.onclick = function () {
             const url = el.getAttribute('url')
-            fetch('http://localhost:8000' + url, {
+            fetch(document.location.origin + url, {
                 method: 'POST',
                 cache: 'no-cache'
             }).then((result) => {

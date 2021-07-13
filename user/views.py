@@ -26,6 +26,7 @@ class LoginFormView(FormView):
         if user is not None:
             login(self.request, user)
             return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/')
 
     def get(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
