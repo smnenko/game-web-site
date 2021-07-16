@@ -2,18 +2,15 @@ from django.test import TestCase
 from django.utils import timezone
 
 from user.models import CustomUser
+from user.tests.factories import CustomUserFactory
+from user.tests.factories import GroupFactory
 
 
 class LoginFormViewTestCase(TestCase):
     def setUp(self):
-        CustomUser.objects.create_user(
-            username='custom',
-            password='custompasswd',
-            email='custom@gmail.com',
-            first_name='Custom',
-            last_name='User',
-            birth_date=timezone.now().date()
-        )
+        user = CustomUserFactory.create(groups=(GroupFactory.create(), ))
+        user.set_password('custompasswd')
+        user.save()
 
     def test_login_exists(self):
         resp = self.client.get('/login')
@@ -31,14 +28,9 @@ class LoginFormViewTestCase(TestCase):
 
 class SignupFormViewTestCase(TestCase):
     def setUp(self):
-        CustomUser.objects.create_user(
-            username='custom1',
-            password='custompasswd',
-            email='custom1@gmail.com',
-            first_name='Custom',
-            last_name='User',
-            birth_date=timezone.now().date()
-        )
+        user = CustomUserFactory.create(groups=(GroupFactory.create(),))
+        user.set_password('custompasswd')
+        user.save()
 
     def test_signup_exists(self):
         resp = self.client.get('/signup')
@@ -59,14 +51,9 @@ class SignupFormViewTestCase(TestCase):
 
 class ProfileListViewTestCase(TestCase):
     def setUp(self):
-        CustomUser.objects.create_user(
-            username='custom',
-            password='custompasswd',
-            email='custom@gmail.com',
-            first_name='Custom',
-            last_name='User',
-            birth_date=timezone.now().date()
-        )
+        user = CustomUserFactory.create(groups=(GroupFactory.create(),))
+        user.set_password('custompasswd')
+        user.save()
 
     def test_profile_exists(self):
         user_login = self.client.login(username='custom', password='custompasswd')

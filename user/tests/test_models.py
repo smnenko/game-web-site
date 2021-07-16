@@ -1,13 +1,15 @@
 from django.test import TestCase
 from django.utils import timezone
 
-from user.tests.factories import CustomUserFactory
+from user.tests.factories import CustomUserFactory, GroupFactory
 from user.models import CustomUser
 
 
 class CustomUserTestCase(TestCase):
     def setUp(self):
-        CustomUserFactory()
+        user = CustomUserFactory.create(groups=(GroupFactory.create(),))
+        user.set_password('custompasswd')
+        user.save()
 
     def test_user_exists(self):
         user = CustomUser.objects.filter(username='custom')

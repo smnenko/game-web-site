@@ -69,9 +69,12 @@ class ScreenshotTestCase(TestCase):
 class GameTestCase(TestCase):
     def setUp(self):
         game = GameFactory(name='Super Mario Bros.')
-        game.genres.set([1, ])
-        game.platforms.set([1, ])
-        game.screenshots.set([1, ])
+        genre = GenreFactory()
+        platform = PlatformFactory()
+        screenshot = ScreenshotFactory()
+        game.genres.set([genre.pk, ])
+        game.platforms.set([platform.pk, ])
+        game.screenshots.set([screenshot.pk, ])
 
     def test_game_if_exists(self):
         self.assertTrue(Game.objects.filter(name='Super Mario Bros.').exists())
@@ -81,9 +84,9 @@ class GameTestCase(TestCase):
         self.assertEqual(game.id, game.pk)
         self.assertEqual(game.name, 'Super Mario Bros.')
         self.assertEqual(game.short_description, 'It is a platform game developed and published by Nintendo.')
-        self.assertQuerysetEqual(game.genres.all(), Genre.objects.filter(id=1))
-        self.assertQuerysetEqual(game.platforms.all(), Platform.objects.filter(id=1))
-        self.assertQuerysetEqual(game.screenshots.all(), Screenshot.objects.filter(id=1))
+        self.assertEqual(game.genres.first(), Genre.objects.first())
+        self.assertEqual(game.platforms.first(), Platform.objects.first())
+        self.assertEqual(game.screenshots.first(), Screenshot.objects.first())
         self.assertEqual(game.date_created.date(), timezone.now().date())
 
     def test_fields_length(self):

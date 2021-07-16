@@ -15,7 +15,7 @@ class GenreFactory(factory.django.DjangoModelFactory):
 class PlatformFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'games.Platform'
-        django_get_or_create = ('name',)
+        django_get_or_create = ('name', )
     name = 'Windows'
 
 
