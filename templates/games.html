@@ -17,13 +17,9 @@
                         <a href="/game/{{ game.id }}" class="btn text-dark bg-light mx-1 rounded px-2 py-1" style="width: 80px">Open</a>
                     {% if user.is_authenticated %}
                         {% if not game.status %}
-                            <button url="/must/{{ game.id }}" class="item btn text-dark bg-light mx-1 rounded px-2 py-1" style="width: 80px">
-                                Must
-                            </button>
+                            <button url="/must/{{ game.id }}" class="item btn text-dark bg-light mx-1 rounded px-2 py-1" style="width: 80px">Must</button>
                         {% else %}
-                            <button url="/must/{{ game.id }}" class="item btn text-dark bg-light mx-1 rounded px-2 py-1" style="width: 80px">
-                                UnMust
-                            </button>
+                            <button url="/must/{{ game.id }}" class="item btn text-dark bg-light mx-1 rounded px-2 py-1" style="width: 80px">UnMust</button>
                         {% endif %}
                     {% endif %}
                     </div>

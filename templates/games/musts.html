@@ -16,9 +16,7 @@
                         <span>{{ genre }} </span>
                     {% endfor %}
                     <p>Users added: {{ must.users_added }}</p>
-                    <button url="/must/{{ must.game.id }}" class="must btn text-light bg-danger mx-1 rounded px-2 py-1 position-absolute" style="top: 280px; right: 25%">
-                        UnMust
-                    </button>
+                    <button url="/must/{{ must.game.id }}" class="must btn text-light bg-danger mx-1 rounded px-2 py-1 position-absolute" style="top: 280px; right: 25%">UnMust</button>
                 </div>
             {% endfor %}
         </div>
