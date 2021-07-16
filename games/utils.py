@@ -1,12 +1,16 @@
 import requests
+import environ
+from django.conf import settings
 
-from backend.secrets import twitter_data
+
+env = environ.Env()
+environ.Env.read_env(open(settings.BASE_DIR.resolve() / '.env'))
 
 
 def get_tweets(game_obj):
     tweets = requests.get(
-        url=twitter_data['url'] + '/tweets/search/recent',
-        headers={'Authorization': 'Bearer ' + twitter_data['bearer']},
+        url='https://api.twitter.com/2' + '/tweets/search/recent',
+        headers={'Authorization': 'Bearer ' + env('TWITTER_BEARER')},
         params={
             'query': '#'
                      + ''.join(i for i in game_obj.name if i.isalnum()).lower(),
@@ -18,8 +22,8 @@ def get_tweets(game_obj):
         tweets = tweets['data']
         for tweet in tweets:
             name = requests.get(
-                url=twitter_data['url'] + f"/users/{tweet['author_id']}",
-                headers={'Authorization': 'Bearer ' + twitter_data['bearer']},
+                url='https://api.twitter.com/2' + f"/users/{tweet['author_id']}",
+                headers={'Authorization': 'Bearer ' + env('TWITTER_BEARER')},
                 params={
                     'user.fields': 'username'
                 }
@@ -28,5 +32,4 @@ def get_tweets(game_obj):
 
     except KeyError as e:
         tweets['message'] = 'Tweets not found'
-        print(f'An error {e} was occurred')
     return tweets

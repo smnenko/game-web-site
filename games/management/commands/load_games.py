@@ -1,11 +1,12 @@
 import requests
+import environ
 from django.core.management.base import BaseCommand
-
-from backend.secrets import igdb_data
+from django.conf import settings
 
 from games.models import Game
 from .utils import create_game_dict
 from .utils import update_game_gps
+from .utils import delete_exists_elements
 
 
 class Command(BaseCommand):
@@ -13,9 +14,16 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        twitch_data = requests.post(url='https://id.twitch.tv/oauth2/token', data=igdb_data).json()
+        env = environ.Env()
+        environ.Env.read_env(open(settings.BASE_DIR.resolve() / '.env'))
+
+        twitch_data = requests.post(url='https://id.twitch.tv/oauth2/token', data={
+            'client_id': env('IGDB_CLIENT_ID'),
+            'client_secret': env('1lmsfzd2fkl0jfg78lq8kija2w1uhm'),
+            'grant_type': 'client_credentials'
+        }).json()
         auth_data = {
-            'Client-ID': igdb_data['client_id'],
+            'Client-ID': env('IGDB_CLIENT_ID'),
             'Authorization': twitch_data['token_type'].title() + ' ' + twitch_data['access_token']
         }
         params = {
@@ -53,6 +61,14 @@ class Command(BaseCommand):
                     description=game_dict['description'],
                     short_description=game_dict['short_description'],
                 )
-                update_game_gps(game_obj, game)
+                genres, platforms, screenshots = update_game_gps(game)
+
+                for list_ in delete_exists_elements(genres, platforms, screenshots):
+                    if list_:
+                        type(list_[0]).objects.bulk_create(list_)
+
+                game_obj.genres.set(genres)
+                game_obj.platforms.set(platforms)
+                game_obj.screenshots.set(screenshots)
 
         self.stdout.write(self.style.SUCCESS('Games successfully updated'))

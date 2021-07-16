@@ -7,6 +7,10 @@ from django.views.generic.base import View
 from django.views.generic import ListView
 from django.db.models import Value, IntegerField
 
+
+from .forms import LoginForm, SignUpForm, UserSettingsForm
+from .models import CustomUser, Avatar
+
 from user.forms import LoginForm
 from user.forms import SignUpForm
 from .models import CustomUser
@@ -22,6 +26,7 @@ class LoginFormView(FormView):
         if user is not None:
             login(self.request, user)
             return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/')
 
     def get(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
@@ -60,10 +65,12 @@ class LogoutView(View):
             return HttpResponseRedirect('/')
 
 
-class ProfileListView(LoginRequiredMixin, ListView):
+class ProfileListView(LoginRequiredMixin, ListView, FormView):
     model = CustomUser
     template_name = 'user/profile.html'
     context_object_name = 'user'
+    form_class = UserSettingsForm
+    success_url = '/profile'
     user = None
 
     def get_queryset(self):
@@ -71,3 +78,17 @@ class ProfileListView(LoginRequiredMixin, ListView):
         return self.user.annotate(
             age=Value(timezone.now().year - self.user.first().birth_date.year, output_field=IntegerField())
         ).first()
+
+
+class UpdateUserFormView(LoginRequiredMixin, FormView):
+    form_class = UserSettingsForm
+    success_url = '/profile'
+
+    def form_valid(self, form):
+        user = CustomUser.objects.filter(username=self.request.user).first()
+        form.save()
+        user.avatar = form.instance
+        user.save()
+        return HttpResponseRedirect(self.success_url)
+
+

@@ -1,6 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager
 
 from django.utils.timezone import now
+from django.contrib.auth.models import Group
 
 
 class UserManager(BaseUserManager):
@@ -11,7 +12,9 @@ class UserManager(BaseUserManager):
             **extra_fields
         )
         user.set_password(password)
+        user_group = Group.objects.filter(name='user').first()
         user.save()
+        user.groups.set([user_group, ])
         return user
 
     def create_superuser(self, username, password, **extra_fields):
