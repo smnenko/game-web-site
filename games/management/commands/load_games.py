@@ -19,7 +19,7 @@ class Command(BaseCommand):
 
         twitch_data = requests.post(url='https://id.twitch.tv/oauth2/token', data={
             'client_id': env('IGDB_CLIENT_ID'),
-            'client_secret': env('1lmsfzd2fkl0jfg78lq8kija2w1uhm'),
+            'client_secret': env('IGDB_CLIENT_SECRET'),
             'grant_type': 'client_credentials'
         }).json()
         auth_data = {
