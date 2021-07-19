@@ -7,6 +7,11 @@
 {% block container %}
     <div class="font-weight-bold text-center" style="padding-top: 15%;">
         <h2 class="font-weight-bold">Login</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <span class="d-block my-2" >{{ message }}</span>
+            {% endfor %}
+        {% endif %}
         <form action="login" method="POST">
             {% csrf_token %}
             {{ form.as_p }}

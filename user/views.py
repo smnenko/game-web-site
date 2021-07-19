@@ -2,14 +2,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import HttpResponseRedirect
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 from django.views.generic.edit import FormView
 from django.views.generic.base import View
 from django.views.generic import ListView
 from django.db.models import Value, IntegerField
 
-
 from .forms import LoginForm, SignUpForm, UserSettingsForm
-from .models import CustomUser, Avatar
+from .models import CustomUser
 
 from user.forms import LoginForm
 from user.forms import SignUpForm
@@ -25,8 +25,10 @@ class LoginFormView(FormView):
         user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
         if user is not None:
             login(self.request, user)
-            return HttpResponseRedirect('/')
-        return HttpResponseRedirect('/error')
+            return HttpResponseRedirect(self.get_success_url())
+        return messages.error(self.request, '• No user with the given username or password was found.') \
+               or messages.error(self.request, '• Please enter correct username and password.') \
+               or HttpResponseRedirect('/login')
 
     def get(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
@@ -90,5 +92,3 @@ class UpdateUserFormView(LoginRequiredMixin, FormView):
         user.avatar = form.instance
         user.save()
         return HttpResponseRedirect(self.success_url)
-
-

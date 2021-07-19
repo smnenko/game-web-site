@@ -6,11 +6,14 @@ from user.tests.factories import CustomUserFactory
 from user.tests.factories import GroupFactory
 
 
-class LoginFormViewTestCase(TestCase):
+class BaseFormViewTestCase(TestCase):
     def setUp(self):
         user = CustomUserFactory.create(groups=(GroupFactory.create(), ))
         user.set_password('custompasswd')
         user.save()
+
+
+class LoginFormViewTestCase(BaseFormViewTestCase):
 
     def test_login_exists(self):
         resp = self.client.get('/login')
@@ -26,11 +29,7 @@ class LoginFormViewTestCase(TestCase):
         self.assertRedirects(resp, '/login?next=/profile')
 
 
-class SignupFormViewTestCase(TestCase):
-    def setUp(self):
-        user = CustomUserFactory.create(groups=(GroupFactory.create(),))
-        user.set_password('custompasswd')
-        user.save()
+class SignupFormViewTestCase(BaseFormViewTestCase):
 
     def test_signup_exists(self):
         resp = self.client.get('/signup')
@@ -49,11 +48,7 @@ class SignupFormViewTestCase(TestCase):
         self.assertEqual(resp.status_code, 200)
 
 
-class ProfileListViewTestCase(TestCase):
-    def setUp(self):
-        user = CustomUserFactory.create(groups=(GroupFactory.create(),))
-        user.set_password('custompasswd')
-        user.save()
+class ProfileListViewTestCase(BaseFormViewTestCase):
 
     def test_profile_exists(self):
         user_login = self.client.login(username='custom', password='custompasswd')
