@@ -7,6 +7,11 @@
 {% block container %}
     <div class="font-weight-bold text-center" style="padding-top: 10%">
         <h2 class="font-weight-bold">Sign Up</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <span class="d-block my-2">{{ message }}</span>
+            {% endfor %}
+        {% endif %}
         <form action="signup" method="POST" class="signup">
             {% csrf_token %}
             {% for field in form %}
