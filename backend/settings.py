@@ -34,7 +34,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -91,11 +91,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env('DATABASE_NAME'),
-        'USER': env('DATABASE_USER'),
-        'PASSWORD': env('DATABASE_PASS'),
-        'HOST': env('DATABASE_HOST'),
-        'PORT': env('DATABASE_PORT'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASS'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
     }
 }
 
@@ -151,7 +151,10 @@ AUTH_USER_MODEL = 'user.CustomUser'
 
 # Celery Configuration Options
 CELERY_TIMEZONE = TIME_ZONE
-CELERY_BROKER_URL = 'amqp://guest:guest@192.168.178.85:5672/%2F'
+
+
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+
 CELERY_TASK_TRACK_STARTED = True
 
 LOGIN_URL = '/login'
