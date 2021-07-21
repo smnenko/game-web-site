@@ -52,14 +52,13 @@ class SignupFormView(FormView):
                 birth_date=form.cleaned_data['birth_date'],
             )
             return HttpResponseRedirect('/')
-        return messages.error(self.request, '• A user with this username already exists, '
-                                            'please enter a different username') \
-               or HttpResponseRedirect(self.failure_url)
+        messages.error(self.request, 'A user with this username already exists, please enter a different username')
+        return HttpResponseRedirect(self.failure_url)
 
     def form_invalid(self, form):
-        return messages.error(self.request, '• An error occurred while trying to authorize, check the correctness '
-                                            'of the entered data and match the passwords') \
-               or HttpResponseRedirect(self.failure_url)
+        messages.error(self.request, 'An error occurred while trying to authorize, check the correctness '
+                                     'of the entered data and match the passwords')
+        return HttpResponseRedirect(self.failure_url)
 
     def get(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:

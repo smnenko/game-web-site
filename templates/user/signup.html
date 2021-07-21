@@ -9,7 +9,7 @@
         <h2 class="font-weight-bold">Sign Up</h2>
         {% if messages %}
             {% for message in messages %}
-                <span class="d-block my-2">{{ message }}</span>
+                <span class="d-block my-2">• {{ message }}</span>
             {% endfor %}
         {% endif %}
         <form action="signup" method="POST" class="signup">
