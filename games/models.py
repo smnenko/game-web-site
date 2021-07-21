@@ -56,12 +56,6 @@ class Game(AbstractModel):
     def __str__(self):
         return self.name
 
-    def __repr__(self):
-        return (
-            f'{self.__class__.__name__}[{self.id}, {self.name}, {self.description[:32]}, {self.genres}, '
-            f'{self.date_release}, {self.date_created}'
-        )
-
 
 class Musts(AbstractModel):
     game = models.ForeignKey(to=Game, on_delete=models.CASCADE)

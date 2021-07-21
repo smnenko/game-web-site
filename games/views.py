@@ -22,7 +22,7 @@ class IndexListView(ListView):
     paginate_by = 6
 
     def get_queryset(self):
-        games = self.model.objects.all()
+        games = self.model.objects.get_queryset().order_by('id')
         if not games:
             return
         if self.request.user.is_authenticated:
@@ -66,7 +66,7 @@ class SearchListView(ListView):
             musts = Musts.objects.filter(user=self.request.user).values_list('game_id', flat=True)
         return self.model.objects.filter(name__icontains=self.request.GET['title']).annotate(status=Case(
             When(id__in=musts, then=Value(True)), default=Value(False), output_field=BooleanField()
-        ))
+        )).order_by('id')
 
 
 @method_decorator(csrf_exempt, name='dispatch')
