@@ -26,9 +26,9 @@ class LoginFormView(FormView):
         if user is not None:
             login(self.request, user)
             return HttpResponseRedirect(self.get_success_url())
-        return messages.error(self.request, '• No user with the given username or password was found.') \
-               or messages.error(self.request, '• Please enter correct username and password.') \
-               or HttpResponseRedirect('/login')
+        messages.error(self.request, 'No user with the given username or password was found.')
+        messages.error(self.request, 'Please enter correct username and password.')
+        return HttpResponseRedirect('/login')
 
     def get(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
