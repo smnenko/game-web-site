@@ -62,7 +62,7 @@ class LogoutView(View):
     def get(self, request, *args, **kwargs):
         if request.method == 'GET' and request.user.is_authenticated:
             logout(request)
-            return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/')
 
 
 class ProfileListView(LoginRequiredMixin, ListView, FormView):
