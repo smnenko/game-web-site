@@ -11,6 +11,17 @@ Configure python virtual environment (good practice) and run next command from r
 pip install -r requirements.txt
 ```
 Go to **.env** file and fill all fields
+> Example:   
+>
+> SECRET_KEY=mscb#cvbrtrtsxzcz#x*aw1@nrft#nnrtf95t#ndd0az^+  
+> DATABASE_NAME=game-web-site  
+> DATABASE_USER=postgres  
+> DATABASE_PASS=postgres  
+> DATABASE_HOST=localhost  
+> DATABASE_PORT=5432  
+>
+> You also need to create PostgreSQL database with DATABASE_NAME that you filled  
+
 Run next commands in root directory (use python3 on linux os)
 ```
 python manage.py migrate
