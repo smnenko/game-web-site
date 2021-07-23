@@ -10,24 +10,33 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
+import _locale
 from pathlib import Path
 
-from .secrets import SECRET_KEY, DATABASES
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Initialize environment variables
+env = environ.Env()
+# Reading .env file
+environ.Env.read_env(open(BASE_DIR.resolve() / '.env'))
+
+_locale._getdefaultlocale = (lambda *args: ['en_US', 'utf8'])
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
+SECRET_KEY = env('SECRET_KEY')
+
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -40,9 +49,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # third-party apps
+    'imagekit',
     # project apps
     'games',
-    'user'
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -75,10 +85,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASS'),
+        'HOST': env('DATABASE_HOST'),
+        'PORT': env('DATABASE_PORT'),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -98,7 +117,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -112,7 +130,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
@@ -124,10 +141,17 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = BASE_DIR / 'static_root'
 
+# Media
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Set custom user model
 AUTH_USER_MODEL = 'user.CustomUser'
 
 # Celery Configuration Options
 CELERY_TIMEZONE = TIME_ZONE
-CELERY_BROKER_URL = 'amqp://guest:guest@192.168.178.85:5672/%2F'
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672/%2F'
 CELERY_TASK_TRACK_STARTED = True
+
+LOGIN_URL = '/login'

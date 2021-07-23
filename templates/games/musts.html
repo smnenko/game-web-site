@@ -8,17 +8,15 @@
     <h1 class="mt-3 ml-3 font-weight-bold">My MUST</h1>
     <div class="container-fluid px-5 py-3">
         <div class="row m-0 mt-3 w-100 h-100">
-            {% for key, item in items.items %}
+            {% for must in musts %}
                 <div class="col-2 h-50 m-0 mb-4">
-                    <img src="{{ item.game.logo }}" class="rounded" style="width: 80%; height: 80%" alt="">
-                    <h4>{{ item.game.name }}</h4>
-                    {% for genre in item.game.genres %}
+                    <img src="{{ must.game.logo }}" class="rounded" style="width: 80%; height: 80%" alt="">
+                    <h4>{{ must.game.name }}</h4>
+                    {% for genre in must.game.genres.all %}
                         <span>{{ genre }} </span>
                     {% endfor %}
-                    <p>Users added: {{ item.users_added }}</p>
-                    <button url="/must/{{ item.game.id }}" class="must btn text-light bg-danger mx-1 rounded px-2 py-1 position-absolute" style="top: 280px; right: 25%">
-                        UnMust
-                    </button>
+                    <p>Users added: {{ must.users_added }}</p>
+                    <button url="/must/{{ must.game.id }}" class="must btn text-light bg-danger mx-1 rounded px-2 py-1 position-absolute" style="top: 280px; right: 25%">UnMust</button>
                 </div>
             {% endfor %}
         </div>

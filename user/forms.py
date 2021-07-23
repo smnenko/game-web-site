@@ -1,8 +1,12 @@
 from django import forms
-from django.utils import timezone
-from django.contrib.auth.hashers import check_password
 
-BIRTH_YEAR_CHOICES = [i for i in range(timezone.now().year - 100, timezone.now().year + 1)]
+from .models import Avatar
+
+
+class UserSettingsForm(forms.ModelForm):
+    class Meta:
+        model = Avatar
+        fields = ('avatar',)
 
 
 class LoginForm(forms.Form):
@@ -21,7 +25,7 @@ class SignUpForm(forms.Form):
     username = forms.CharField(
         max_length=16,
         required=True,
-        widget=forms.TextInput({'placeholder': 'Enter username here...', 'class': 'form-input col-3'})
+        widget=forms.TextInput({'placeholder': 'Enter username here...', 'class': 'form-input col-3'}),
     )
     email = forms.EmailField(
         required=True,
@@ -51,7 +55,6 @@ class SignUpForm(forms.Form):
     )
 
     def clean(self):
-        cleaned_data = super(SignUpForm, self).clean()
         cleaned_data = super(SignUpForm, self).clean()
         if str(cleaned_data['password']) != str(cleaned_data['confirm_password']):
             raise forms.ValidationError('Passwords don\'t match')

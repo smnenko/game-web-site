@@ -4,12 +4,15 @@ window.onload = function () {
         let el = classes[item]
         el.onclick = function () {
             const url = el.getAttribute('url')
-            fetch('http://localhost:8000' + url, {
+            fetch(document.location.origin + url, {
                 method: 'POST',
                 cache: 'no-cache'
             }).then((result) => {
                 if (result.status === 200) {
-                    el.textContent === 'Must' ? el.textContent = 'UnMust' : el.textContent = 'Must'
+                    if (el.textContent === 'UnMust')
+                        el.textContent = 'Must'
+                    else
+                        el.textContent = 'UnMust'
                 }
             })
         }
@@ -20,7 +23,7 @@ window.onload = function () {
         let el = musts[must]
         el.onclick = function () {
             const url = el.getAttribute('url')
-            fetch('http://localhost:8000' + url, {
+            fetch(document.location.origin + url, {
                 method: 'POST',
                 cache: 'no-cache'
             }).then((result) => {
@@ -29,8 +32,7 @@ window.onload = function () {
                         el.textContent = 'UnMust'
                         el.classList.add('bg-danger')
                         el.classList.remove('bg-success')
-                    }
-                    else {
+                    } else {
                         el.textContent = 'reMust'
                         el.classList.remove('bg-danger')
                         el.classList.add('bg-success')

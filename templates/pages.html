@@ -1,12 +1,26 @@
 <div class="d-flex justify-content-center m-auto" style="width: 5vh; height: 5vh;">
-    {% for page in pages %}
-    <a class="btn font-weight-bold mr-3  bg-danger text-light rounded" style="font-size: 18px;" href="/page/{{ page }}">{{ page }}</a>
-    {% endfor %}
+    <!-- class="btn font-weight-bold mr-3  bg-danger text-light rounded" style="font-size: 18px;" -->
+    {% if page_obj.has_previous %}
+        <a href="?page=1" class="btn font-weight-bold mr-3  bg-danger text-light rounded"
+           style="font-size: 18px;">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}"
+           class="btn font-weight-bold mr-3  bg-danger text-light rounded"
+           style="font-size: 18px;">{{ page_obj.previous_page_number }}</a>
+    {% endif %}
+    {% if is_paginated %}
+        <div class="btn font-weight-bold mr-3  bg-secondary text-light rounded" style="font-size: 18px;">{{ page_obj.number }}</div>
+    {% endif %}
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="btn font-weight-bold mr-3  bg-danger text-light rounded"
+           style="font-size: 18px;">{{ page_obj.next_page_number }}</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}"
+           class="btn font-weight-bold mr-3  bg-danger text-light rounded" style="font-size: 18px;">Last</a>
+    {% endif %}
 
     <style>
         .pages a:hover {
-    position: relative;
-    bottom: 5px;
-}
+            position: relative;
+            bottom: 5px;
+        }
     </style>
 </div>
