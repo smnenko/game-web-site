@@ -52,7 +52,7 @@ class SignupFormView(FormView):
                 last_name=form.cleaned_data['last_name'],
                 birth_date=form.cleaned_data['birth_date'],
             )
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/login')
         messages.error(self.request, 'A user with this username already exists, please enter a different username')
         return HttpResponseRedirect(self.failure_url)
 

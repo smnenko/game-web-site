@@ -18,6 +18,11 @@ python manage.py loaddata initial.json
 python manage.py runserver
 ```
 Go to *https://localhost:8000/* and be fine =)
+##### Or you can start with docker-compose
+> You need fill DATABASE_HOST to "db" (without quotes) after "=" and DATABASE_PORT to "5432" (without quotes) in .env file
+```
+docker-compose up --build
+```
 ### Screenshots
 * Main page
 ![Main](https://github.com/smnenko/game-web-site/blob/master/docs/images/Main%20page.PNG?raw=true)

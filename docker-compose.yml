@@ -41,16 +41,12 @@ services:
     restart: always
     volumes:
     - ./data/db:/var/lib/postgres/data
-    environment:
-      - POSTGRES_DB=game-web-site
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
     ports:
     - 5432:5432
 
   web:
     build: .
-    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+    command: sh -c "python3 manage.py migrate && wait && python3 manage.py loaddata initial.json && wait && gunicorn backend.wsgi:application --bind 0.0.0.0:8000"
     volumes:
     - .:/code
     ports:
