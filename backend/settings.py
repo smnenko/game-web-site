@@ -16,6 +16,7 @@ from pathlib import Path
 import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Initialize environment variables
@@ -56,6 +57,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -155,3 +157,5 @@ CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672/%2F'
 CELERY_TASK_TRACK_STARTED = True
 
 LOGIN_URL = '/login'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
