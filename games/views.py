@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
 from django.views.generic.base import View
 from django.views.generic.edit import DeleteView
-from django.db.models import Count, Case, When, Value, BooleanField, IntegerField, Q
+from django.db.models import Count, Case, When, Value, BooleanField
 from django.utils.decorators import method_decorator
 
 from games.models import Game
