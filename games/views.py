@@ -98,4 +98,4 @@ class MustsListView(LoginRequiredMixin, ListView):
     context_object_name = 'musts'
 
     def get_queryset(self):
-        return self.model.objects.filter(user=self.request.user).annotate(users_added=Count('game'))
+        return utils.MustUtil(self.request).get_musts()
