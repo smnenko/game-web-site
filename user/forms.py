@@ -43,7 +43,7 @@ class SignUpForm(forms.Form):
     )
     birth_date = forms.DateField(
         required=True,
-        widget=forms.DateInput({'placeholder': 'Enter birthday here...', 'class': 'form-input col-3'})
+        widget=forms.DateInput({'placeholder': 'Enter birthday here... (ex 2001-01-28)', 'class': 'form-input col-3'})
     )
     password = forms.CharField(
         required=True,

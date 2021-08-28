@@ -1,6 +1,9 @@
 import requests
 import environ
 from django.conf import settings
+from django.db.models import Count
+
+from .models import Musts
 
 
 env = environ.Env()
@@ -33,3 +36,32 @@ def get_tweets(game_obj):
     except KeyError as e:
         tweets['message'] = 'Tweets not found'
     return tweets
+
+
+class MustUtil:
+
+    def __init__(self, request):
+        self.request = request
+        self.model = Musts
+        self.queryset = {}
+
+    def get_musts(self):
+        games_count = (
+            self.model.objects
+                .values('game__id', 'game__name', 'game__genres__name', 'game__logo')
+                .annotate(users_added=Count('game__name'))
+                .order_by('game_id')
+        )
+        user_musts = self.model.objects.filter(user=self.request.user).values_list('game_id', flat=True)
+
+        for i in games_count:
+            if i.get('game__id') in user_musts:
+                if i.get('game__id') not in self.queryset.keys():
+                    self.queryset.setdefault(i['game__id'], {})
+                    self.queryset.get(i['game__id']).setdefault('name', i['game__name'])
+                    self.queryset.get(i['game__id']).setdefault('logo', i['game__logo'])
+                    self.queryset.get(i['game__id']).setdefault('genres', []).append(i['game__genres__name'])
+                    self.queryset.get(i['game__id']).setdefault('users_added', i['users_added'])
+                else:
+                    self.queryset.get(i['game__id']).get('genres').append(i['game__genres__name'])
+        return self.queryset
