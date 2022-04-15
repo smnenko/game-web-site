@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+{% load placeholder %}
+{% load classes %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block content %}
+    <div class="content__login d-flex align-items-center justify-content-center h-100 pb-5">
+        <div class="content__login__container bg-black p-3">
+            <div class="container__title">Log In now</div>
+            <form class="container__form" action="{% url 'login' %}" method="POST">
+                <div class="container__form__errors">
+                {% for message in messages %}
+                    <div class="form__errors__error">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                </div>
+                {% csrf_token %}
+                <div class="field row m-0 my-4">
+                    {{ form.username | placeholder:' Username' | classes:'bg-black py-2 border-0' }}
+                </div>
+                <div class="field row m-0">
+                    {{ form.password | placeholder:' Password' | classes:'bg-black py-2 border-0'}}
+                </div>
+                <div class="container__form__password_reset my-2">
+                    <a href="">Forgot password?</a>
+                </div>
+                <input class="button button-filled w-100" type="submit" value="Submit">
+            </form>
+            <div class="container__signup align-items-center text-center my-3">
+                Do not have account yet? <a href="{% url 'signup' %}">It is time to create</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

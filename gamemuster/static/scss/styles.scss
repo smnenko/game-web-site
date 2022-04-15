@@ -1,0 +1,227 @@
+@import "./variables.scss";
+
+* {
+    margin: 0;
+    padding: 0;
+    color: white;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+
+    &:hover {
+        color: lightgray;
+    }
+
+    &:after {
+        color: white;
+    }
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    background: $background;
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.1rem;
+}
+
+.background-black {
+    background: black;
+    border-radius: 20px;
+}
+
+.font-roboto {
+    font-family: Roboto, sans-serif;
+}
+
+.container-xxl {
+    height: 100%;
+}
+
+.header__menu {
+    width: 35%;
+}
+
+.header__menu__item {
+    line-height: 21px;
+}
+
+.header__menu__item__link {
+    transition: color 0.3s;
+}
+
+.header__menu__item__link:hover {
+    color: $orange;
+    transition: color 0.3s;
+}
+
+.content {
+    height: 90%;
+}
+
+.content__title {
+    width: 60%;
+    font-size: 4rem;
+    line-height: 4.5rem;
+    letter-spacing: 0.02em;
+}
+
+@media screen and (max-width: 800px) {
+    .content__title {
+        width: 100%;
+    }
+}
+
+.content__caption {
+    width: 40%;
+    line-height: 150%;
+    letter-spacing: 0.02em;
+}
+
+.button {
+    width: 12rem;
+    height: 4rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    line-height: 150%;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.02em;
+}
+
+.button span {
+    margin: 0 auto;
+}
+
+.button-outlined {
+    border: 2px solid transparent;
+    border-radius: 5px;
+    transition: border 0.3s;
+}
+
+.button-outlined:hover {
+    border: 2px solid $orange;
+    transition: border 0.5s;
+}
+
+.button-gradient {
+    color: black;
+    background: linear-gradient(90deg, $orange 0%, $yellow 100%);
+    border-radius: 5px;
+}
+
+.button-gradient:hover {
+    color: #222222;
+}
+
+.button-gradient span {
+    color: inherit;
+}
+
+.button-gradient span:hover {
+    color: inherit;
+}
+
+.button-filled {
+    color: black;
+    background: $yellow;
+    border: 0;
+    border-radius: 5px;
+}
+
+.button-filled:hover {
+    color: #222222;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 0.8rem;
+    line-height: 150%;
+    letter-spacing: 0.02em;
+}
+
+.footer__item {
+    color: lightgray;
+}
+
+.container__title {
+    font-size: 2rem;
+}
+
+.content__login__container {
+    width: 35%;
+    border-radius: 20px;
+}
+
+@media screen and (max-width: 800px) {
+    .content__login__container {
+        width: 90%;
+    }
+}
+
+
+
+.form__errors__error {
+    color: #ff1768;
+}
+
+.field {
+    border: 2px solid $yellow;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+input {
+    appearance: none;
+    -webkit-appearance: none;
+    outline: 0;
+    background: black;
+    padding: 0.5rem 0.3rem;
+    border: 0;
+}
+
+.game {
+    border-radius: 10px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #050E11;
+}
+
+.game__title {
+    background: black;
+    border-radius: 5px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.pagination {
+    border-radius: 5px;
+}
+
+.page {
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.page-active {
+    color: $yellow;
+}
+
+.screenshot {
+    border-radius: 10px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

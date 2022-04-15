@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+django-environ = "*"
+celery = "*"
+pillow = "*"
+django-imagekit = "*"
+psycopg2 = "*"
+requests = "*"
+whitenoise = "*"
+django-debug-toolbar = "*"
+redis = "*"
+factory-boy = "*"
+libsass = "*"
+django-sass-processor = "*"
+
+[dev-packages]
+pytest-django = "*"
+
+[requires]
+python_version = "3.9"

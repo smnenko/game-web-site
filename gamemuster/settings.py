@@ -1,0 +1,164 @@
+import os
+import sys
+from pathlib import Path
+
+import environ
+from celery.schedules import crontab
+
+PROJECT_DIR = Path(__file__).resolve().parent
+BASE_DIR = PROJECT_DIR.parent
+sys.path.append(os.path.join(PROJECT_DIR, 'apps'))
+
+env = environ.Env()
+environ.Env.read_env(open(BASE_DIR.resolve() / '.env'))
+
+SECRET_KEY = env('SECRET_KEY')
+
+DEBUG = bool(int(env('DEBUG')))
+
+ALLOWED_HOSTS = ['*']
+
+REDIS_URL = (
+    f"redis://{env('REDIS_USER')}:{env('REDIS_PASS')}@"
+    f"{env('REDIS_HOST')}:{env('REDIS_PORT')}/"
+    f"{env('REDIS_NAME')}"
+)
+
+THIRD_PARTY_APPS = [
+    'imagekit',
+    'debug_toolbar',
+    'sass_processor'
+]
+
+PROJECT_APPS = [
+    'core',
+    'games',
+    'user'
+]
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    *THIRD_PARTY_APPS,
+    *PROJECT_APPS
+]
+
+MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'gamemuster.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [PROJECT_DIR.joinpath('templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'gamemuster.wsgi.application'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASS'),
+        'HOST': env('DATABASE_HOST'),
+        'PORT': env('DATABASE_PORT'),
+    }
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": REDIS_URL
+    }
+}
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'Europe/Minsk'
+
+USE_I18N = True
+
+USE_TZ = True
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [PROJECT_DIR.joinpath('static')]
+
+STATIC_ROOT = BASE_DIR.joinpath('deploy').joinpath('static_root')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR.joinpath('deploy').joinpath('media')
+
+AUTH_USER_MODEL = 'user.CustomUser'
+
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_BROKER_URL = REDIS_URL
+CELERY_TASK_TRACK_STARTED = True
+CELERY_BEAT_SCHEDULE = {
+    'test_task': {
+        'task': 'gamemuster.celery.test_task',
+        'schedule': crontab(minute='*')
+    },
+    'load_games_from_igdb': {
+        'task': 'gamemuster.celery.load_games_from_igdb',
+        'schedule': crontab(hour='6, 18')
+    }
+}
+
+LOGIN_URL = '/login'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'sass_processor.finders.CssFinder',
+]
+
+SASS_PROCESSOR_ROOT = STATIC_ROOT
