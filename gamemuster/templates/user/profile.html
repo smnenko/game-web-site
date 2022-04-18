@@ -1,15 +1,15 @@
-{% extends "base.html" %}
+{% extends "core/base.html" %}
 
 {% block title %}
-    <title>GameMusters - {{ user }}</title>
+    {{ user|title }} Profile
 {% endblock %}
 
-{% block container %}
+{% block content %}
     <div class="row">
         <div class="profile col-8 font-weight-bold">
             <h2 class="font-weight-bold pl-5 pt-3">My Profile</h2>
             <div class="mt-4 ml-4">
-                <img src="/user{{ MEDIA_URL }}{{ user.avatar.avatar_medium.url }}" alt="" class="rounded float-left">
+                <img src="/user{{ MEDIA_URL }}{{ user_detail.avatar.avatar_medium.url }}" alt="" class="rounded float-left">
                 <div class="float-left ml-4 w-25">
                     <p class="row">
                         <span class="col-5 text-right text-secondary">Username</span>
@@ -29,14 +29,14 @@
                     </p>
                     <p class="row">
                         <span class="col-5 text-right text-secondary">Age</span>
-                        <span class="col-7 border-left">{{ user.age }}</span>
+                        <span class="col-7 border-left">{{ user_detail.age }}</span>
                     </p>
                 </div>
             </div>
         </div>
         <div class="col-4 pt-3">
             <h2>Settings:</h2>
-            <form action="{% url 'profile_update' %}" method="POST" enctype="multipart/form-data">
+            <form action="{% url 'profile_update' user.pk %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit" class="btn btn-danger font-weight-bold float-left">Submit</button>

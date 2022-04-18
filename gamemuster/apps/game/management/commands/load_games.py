@@ -3,7 +3,7 @@ import environ
 from django.core.management.base import BaseCommand
 from django.conf import settings
 
-from games.models import Game
+from game.models import Game
 from .utils import create_game_dict
 from .utils import update_game_gps
 from .utils import delete_exists_elements

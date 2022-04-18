@@ -1,5 +1,6 @@
 from typing import Union
 
+from django.conf import settings
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.decorators.csrf import csrf_exempt
@@ -9,9 +10,9 @@ from django.views.generic.edit import DeleteView
 from django.utils.decorators import method_decorator
 
 from core.mixins import OrderingMixin, MustSingleRequiredMixin, MustMultipleRequiredMixin
-from games.models import Game
-from games.models import Musts
-from games import utils
+from game.models import Game
+from game.models import Musts
+from game.utils import GameTweetsParser
 
 
 class AbstractGameView:
@@ -23,7 +24,7 @@ class AbstractMustsView:
 
 
 class GameListView(MustMultipleRequiredMixin, OrderingMixin, AbstractGameView, ListView):
-    template_name = 'games/games.html'
+    template_name = 'game/games.html'
     available_orderings = ['name', 'date_release', 'ratings_critics']
     available_filtering = ['name', 'genres', 'platforms']
     paginate_by = 15
@@ -46,17 +47,17 @@ class GameListView(MustMultipleRequiredMixin, OrderingMixin, AbstractGameView, L
 
 
 class GameView(LoginRequiredMixin, PermissionRequiredMixin, MustSingleRequiredMixin, AbstractGameView, DetailView):
-    template_name = 'games/game.html'
+    template_name = 'game/game.html'
     permission_required = 'games.view_game'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['tweets'] = utils.get_tweets(self.object)
+        context['tweets'] = GameTweetsParser().parse(self.object.name)
         return context
 
 
 class SearchListView(MustMultipleRequiredMixin, AbstractGameView, ListView):
-    template_name = 'games/index.html'
+    template_name = 'game/index.html'
     context_object_name = 'page_obj'
 
 
@@ -80,7 +81,11 @@ class GameDeleteView(PermissionRequiredMixin, AbstractGameView, DeleteView):
 
 
 class MustsListView(LoginRequiredMixin, AbstractMustsView, ListView):
-    template_name = 'games/musts.html'
+    template_name = 'game/musts.html'
 
     def get_queryset(self):
-        return utils.MustUtil(self.request).get_musts()
+        return (
+            super().get_queryset()
+            .filter(user=self.request.user)
+            .annotate(users_added=Count('game__name'))
+        )

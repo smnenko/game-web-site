@@ -12,8 +12,8 @@ class UserManager(BaseUserManager):
             **extra_fields
         )
         user.set_password(password)
-        user_group = Group.objects.filter(name='user').first()
         user.save()
+        user_group = Group.objects.filter(name='user').first()
         user.groups.set([user_group, ])
         return user
 

@@ -5,24 +5,23 @@ from pathlib import Path
 import environ
 from celery.schedules import crontab
 
-PROJECT_DIR = Path(__file__).resolve().parent
-BASE_DIR = PROJECT_DIR.parent
+PROJECT_DIR = Path(__file__).parent.resolve()
+BASE_DIR = PROJECT_DIR.parent.resolve()
 sys.path.append(os.path.join(PROJECT_DIR, 'apps'))
 
 env = environ.Env()
-environ.Env.read_env(open(BASE_DIR.resolve() / '.env'))
+environ.Env.read_env(open(BASE_DIR.joinpath('.env')))
 
 SECRET_KEY = env('SECRET_KEY')
+DEBUG = env.bool('DEBUG')
+ALLOWED_HOSTS = env('ALLOWED_HOSTS').split()
 
-DEBUG = bool(int(env('DEBUG')))
+IGDB_CLIENT_ID = env('IGDB_CLIENT_ID')
+IGDB_CLIENT_SECRET = env('IGDB_CLIENT_SECRET')
 
-ALLOWED_HOSTS = ['*']
-
-REDIS_URL = (
-    f"redis://{env('REDIS_USER')}:{env('REDIS_PASS')}@"
-    f"{env('REDIS_HOST')}:{env('REDIS_PORT')}/"
-    f"{env('REDIS_NAME')}"
-)
+TWITTER_KEY = env('TWITTER_KEY')
+TWITTER_SECRET = env('TWITTER_SECRET')
+TWITTER_BEARER = env('TWITTER_BEARER')
 
 THIRD_PARTY_APPS = [
     'imagekit',
@@ -32,7 +31,7 @@ THIRD_PARTY_APPS = [
 
 PROJECT_APPS = [
     'core',
-    'games',
+    'game',
     'user'
 ]
 
@@ -90,6 +89,12 @@ DATABASES = {
     }
 }
 
+REDIS_URL = (
+    f"redis://{env('REDIS_USER')}:{env('REDIS_PASS')}@"
+    f"{env('REDIS_HOST')}:{env('REDIS_PORT')}/"
+    f"{env('REDIS_NAME')}"
+)
+
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
@@ -133,8 +138,6 @@ STATIC_ROOT = BASE_DIR.joinpath('deploy').joinpath('static_root')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR.joinpath('deploy').joinpath('media')
 
-AUTH_USER_MODEL = 'user.CustomUser'
-
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_BROKER_URL = REDIS_URL
 CELERY_TASK_TRACK_STARTED = True
@@ -149,16 +152,14 @@ CELERY_BEAT_SCHEDULE = {
     }
 }
 
+AUTH_USER_MODEL = 'user.CustomUser'
 LOGIN_URL = '/login'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'sass_processor.finders.CssFinder',
 ]
-
 SASS_PROCESSOR_ROOT = STATIC_ROOT

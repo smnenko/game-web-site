@@ -4,13 +4,12 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.views.generic import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.base import View
-from django.views.generic import ListView
 from django.db.models import Value, IntegerField
 
 from .forms import LoginForm, SignUpForm, UserSettingsForm
-from .models import CustomUser
 
 from user.forms import LoginForm
 from user.forms import SignUpForm
@@ -70,21 +69,16 @@ class LogoutView(View):
         return HttpResponseRedirect(reverse_lazy('index'))
 
 
-class ProfileListView(LoginRequiredMixin, ListView, FormView):
+class ProfileView(LoginRequiredMixin, DetailView, FormView):
     model = CustomUser
     template_name = 'user/profile.html'
-    context_object_name = 'user'
     form_class = UserSettingsForm
     success_url = reverse_lazy('profile')
 
     def get_queryset(self):
-        return (
-            self.model.objects
-            .filter(username=self.request.user)
-            .annotate(age=Value(
-                timezone.now().year - self.user.first().birth_date.year,
-                output_field=IntegerField())
-            )
+        return super().get_queryset().annotate(age=Value(
+            timezone.now().year - self.request.user.birth_date.year,
+            output_field=IntegerField())
         )
 
 

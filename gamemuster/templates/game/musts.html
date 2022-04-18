@@ -1,0 +1,26 @@
+{% extends "core/base.html" %}
+{% load get_item %}
+
+{% block title %}
+    My Musts
+{% endblock %}
+
+{% block content %}
+    <div class="content__musts d-flex h-100 align-items-center">
+        <div class="content__musts__container background-black w-100 h-75 mb-5">
+            <div class="row">
+                {% for must in musts_list %}
+                    <div class="col-2 h-25">
+                        <img src="{{ must.game.logo }}" class="rounded" style="width: 80%; height: 80%" alt="">
+                        <h4><a href="{% url 'game' must.game.id %}">{{ must.game.name }}</a></h4>
+                        {% for genre in must.game.genres.all %}
+                            <span>{{ genre }}</span>
+                        {% endfor %}
+                        <p>Users added: {{ 0 }}</p>
+                        <button url="{% url 'must' must.game.id %}" class="must btn text-light bg-danger mx-1 rounded px-2 py-1" style="top: 280px; right: 25%">UnMust</button>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

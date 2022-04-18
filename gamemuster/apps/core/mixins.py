@@ -2,7 +2,7 @@ from django.db.models import Exists, Case, Value, When, BooleanField
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.list import MultipleObjectMixin
 
-from games.models import Musts
+from game.models import Musts
 
 
 class OrderingMixin(MultipleObjectMixin):

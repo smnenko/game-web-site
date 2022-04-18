@@ -13,4 +13,4 @@ class AbstractModel(models.Model):
 
     def save(self, *args, **kwargs):
         self.updated_at = now()
-        return super().save(args, kwargs)
+        return super().save(*args, **kwargs)

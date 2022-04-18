@@ -1,15 +1,15 @@
 from django.contrib import admin
 
-from games.models import Game
-from games.models import Musts
-from games.models import Genre
-from games.models import Platform
-from games.models import Screenshot
+from game.models import Game
+from game.models import Musts
+from game.models import Genre
+from game.models import Platform
+from game.models import Screenshot
 
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'get_genres', 'get_platforms', 'ratings_users', 'ratings_critics']
+    list_display = ['id', 'name', 'get_genres', 'get_platforms']
     list_display_links = ['name']
     list_filter = ['genres', 'platforms']
 

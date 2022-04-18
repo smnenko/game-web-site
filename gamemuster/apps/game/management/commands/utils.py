@@ -1,8 +1,8 @@
 import datetime
 
-from games.models import Genre
-from games.models import Platform
-from games.models import Screenshot
+from game.models import Genre
+from game.models import Platform
+from game.models import Screenshot
 
 
 def add_genre(name):
