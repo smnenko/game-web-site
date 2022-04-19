@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.db import IntegrityError
 from django.shortcuts import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -39,10 +40,10 @@ class LoginFormView(FormView):
 class SignupFormView(FormView):
     form_class = SignUpForm
     template_name = 'user/signup.html'
-    success_url = reverse_lazy('games')
+    success_url = reverse_lazy('login')
 
     def form_valid(self, form):
-        if not CustomUser.objects.filter(username=form.cleaned_data['username']).exists():
+        try:
             CustomUser.objects.create_user(
                 username=form.cleaned_data['username'],
                 password=form.cleaned_data['password'],
@@ -52,7 +53,15 @@ class SignupFormView(FormView):
                 birth_date=form.cleaned_data['birth_date'],
             )
             return super().form_valid(form)
-        messages.error(self.request, 'A user with this username already exists, please enter a different username')
+        except IntegrityError:
+            return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        if not form.errors:
+            messages.error(
+                self.request,
+                'The user with this username or email already exists, please enter a different username or email'
+            )
         return super().form_invalid(form)
 
     def get(self, request, *args, **kwargs):

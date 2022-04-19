@@ -5,8 +5,8 @@ from pathlib import Path
 import environ
 from celery.schedules import crontab
 
-PROJECT_DIR = Path(__file__).parent.resolve()
-BASE_DIR = PROJECT_DIR.parent.resolve()
+PROJECT_DIR = Path(__file__).parent
+BASE_DIR = PROJECT_DIR.parent
 sys.path.append(os.path.join(PROJECT_DIR, 'apps'))
 
 env = environ.Env()
@@ -153,7 +153,7 @@ CELERY_BEAT_SCHEDULE = {
 }
 
 AUTH_USER_MODEL = 'user.CustomUser'
-LOGIN_URL = '/login'
+LOGIN_URL = '/user/login'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'

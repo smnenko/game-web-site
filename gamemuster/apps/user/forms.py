@@ -21,10 +21,10 @@ class SignUpForm(forms.Form):
     last_name = forms.CharField(max_length=64, required=True, widget=forms.TextInput())
     birth_date = forms.DateField(required=True, widget=forms.DateInput())
     password = forms.CharField(required=True, widget=forms.PasswordInput())
-    confirm_password = forms.CharField(required=True, widget=forms.PasswordInput())
+    password_confirm = forms.CharField(required=True, widget=forms.PasswordInput())
 
     def clean(self):
         cleaned_data = super().clean()
-        if str(cleaned_data['password']) != str(cleaned_data['confirm_password']):
-            raise forms.ValidationError('Passwords don\'t match')
+        if str(cleaned_data['password']) != str(cleaned_data['password_confirm']):
+            self.add_error('password_confirm', 'Passwords don\'t match')
         return cleaned_data

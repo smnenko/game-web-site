@@ -14,7 +14,6 @@ class CustomUserFactory(factory.django.DjangoModelFactory):
             'birth_date'
         )
 
-    username = 'custom'
     password = 'custompassword'
     email = 'custom@gmail.com'
     first_name = 'Custom'
@@ -27,8 +26,7 @@ class CustomUserFactory(factory.django.DjangoModelFactory):
             return
 
         if extracted:
-            for group in extracted:
-                self.groups.add(group)
+            self.groups.set(extracted)
 
 
 class GroupFactory(factory.django.DjangoModelFactory):

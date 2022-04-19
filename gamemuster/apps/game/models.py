@@ -14,13 +14,6 @@ class Genre(AbstractModel):
         return f'{self.__class__.__name__}<{self.id}, {self.name}, {self.created_at}>'
 
 
-class Screenshot(AbstractModel):
-    url = models.URLField(unique=True)
-
-    def __repr__(self):
-        return f'{self.__class__.__name__}<{self.id}, {self.url}, {self.created_at}>'
-
-
 class Platform(AbstractModel):
     name = models.CharField(max_length=128, unique=True)
 
@@ -29,6 +22,13 @@ class Platform(AbstractModel):
 
     def __repr__(self):
         return f'{self.__class__.__name__}<{self.id}, {self.name}, {self.created_at}>'
+
+
+class Screenshot(AbstractModel):
+    url = models.URLField(unique=True)
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}<{self.id}, {self.url}, {self.created_at}>'
 
 
 class Rating(AbstractModel):

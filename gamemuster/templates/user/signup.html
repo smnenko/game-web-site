@@ -8,36 +8,43 @@
     <div class="content__login d-flex align-items-center justify-content-center h-100 pb-5">
         <div class="content__login__container bg-black p-3">
             <div class="container__title">Create your account</div>
-            <form class="container__form" action="{% url 'login' %}" method="POST">
+            <form class="container__form" action="{% url 'signup' %}" method="POST">
                 <div class="container__form__errors">
-                {% for message in messages %}
-                    <div class="form__errors__error">
-                        {{ message }}
-                    </div>
-                {% endfor %}
+                    {% for message in messages %}
+                        <div class="form__errors__error">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
                 </div>
                 {% csrf_token %}
                 <div class="field row m-0 my-3">
                     {{ form.username | placeholder:' Username' | classes:'bg-black py-2 border-0' }}
                 </div>
+                    {{ form.errors.username }}
                 <div class="field row m-0 my-3">
                     {{ form.email | placeholder:' Email' | classes:'bg-black py-2 border-0' }}
                 </div>
+                    {{ form.errors.email }}
                 <div class="field row m-0 my-3">
                     {{ form.first_name | placeholder:' First name' | classes:'bg-black py-2 border-0' }}
                 </div>
+                    {{ form.errors.first_name }}
                 <div class="field row m-0 my-3">
                     {{ form.last_name | placeholder:' Last name' | classes:'bg-black py-2 border-0' }}
                 </div>
+                    {{ form.errors.last_name }}
                 <div class="field row m-0 my-3">
                     {{ form.birth_date | placeholder:' Date of birth (yyyy-mm-dd)' | classes:'bg-black py-2 border-0' }}
                 </div>
+                    {{ form.errors.birth_date }}
                 <div class="field row m-0 my-3">
                     {{ form.password | placeholder:' Password' | classes:'bg-black py-2 border-0'}}
                 </div>
+                    {{ form.errors.password }}
                 <div class="field row m-0 my-3">
-                    {{ form.confirm_password | placeholder:' Confirm password' | classes:'bg-black py-2 border-0'}}
+                    {{ form.password_confirm | placeholder:' Confirm password' | classes:'bg-black py-2 border-0'}}
                 </div>
+                    {{ form.errors.password_confirm }}
                 <input class="button button-filled w-100" type="submit" value="Submit">
             </form>
             <div class="container__signup align-items-center text-center my-3">

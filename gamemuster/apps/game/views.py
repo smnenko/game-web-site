@@ -1,6 +1,7 @@
 from typing import Union
 
 from django.conf import settings
+from django.db.models import Count
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.decorators.csrf import csrf_exempt
@@ -48,7 +49,7 @@ class GameListView(MustMultipleRequiredMixin, OrderingMixin, AbstractGameView, L
 
 class GameView(LoginRequiredMixin, PermissionRequiredMixin, MustSingleRequiredMixin, AbstractGameView, DetailView):
     template_name = 'game/game.html'
-    permission_required = 'games.view_game'
+    permission_required = 'game.view_game'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -63,7 +64,7 @@ class SearchListView(MustMultipleRequiredMixin, AbstractGameView, ListView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class MustView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = ['games.add_musts', 'games.delete_musts']
+    permission_required = ['game.add_musts', 'game.delete_musts']
 
     def post(self, request, *args, **kwargs):
         game_obj = Game.objects.filter(id=self.kwargs['pk'])
@@ -77,7 +78,7 @@ class MustView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 class GameDeleteView(PermissionRequiredMixin, AbstractGameView, DeleteView):
     success_url = '/'
-    permission_required = ['games.view_musts', 'games.delete_game']
+    permission_required = ['game.view_musts', 'game.delete_game']
 
 
 class MustsListView(LoginRequiredMixin, AbstractMustsView, ListView):
