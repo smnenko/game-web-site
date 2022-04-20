@@ -19,7 +19,7 @@ class SignUpForm(forms.Form):
     email = forms.EmailField(required=True, widget=forms.EmailInput())
     first_name = forms.CharField(max_length=64, required=True, widget=forms.TextInput())
     last_name = forms.CharField(max_length=64, required=True, widget=forms.TextInput())
-    birth_date = forms.DateField(required=True, widget=forms.DateInput())
+    birth_date = forms.DateField(required=True, widget=forms.DateInput(attrs={'type': 'date'}))
     password = forms.CharField(required=True, widget=forms.PasswordInput())
     password_confirm = forms.CharField(required=True, widget=forms.PasswordInput())
 
