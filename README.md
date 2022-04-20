@@ -36,12 +36,14 @@ docker-compose up --build
 ```
 ### Screenshots
 * Main page
-![Main](https://github.com/smnenko/game-web-site/blob/master/docs/images/Main%20page.PNG?raw=true)
+![Main](https://raw.githubusercontent.com/smnenko/gamemuster/master/docs/images/Main%20page.png)
 * Login page
-![Login](https://github.com/smnenko/game-web-site/blob/master/docs/images/Login%20page.PNG?raw=true)
+![Login](https://raw.githubusercontent.com/smnenko/gamemuster/master/docs/images/Login%20page.png)
 * Signup page
-![Signup](https://github.com/smnenko/game-web-site/blob/master/docs/images/Signup%20page.PNG?raw=true)
+![Signup](https://raw.githubusercontent.com/smnenko/gamemuster/master/docs/images/Signup%20page.png)
 * Profile page
-![Profile](https://github.com/smnenko/game-web-site/blob/master/docs/images/Profile%20page.PNG?raw=true)
+![Profile](https://raw.githubusercontent.com/smnenko/gamemuster/master/docs/images/Profile%20page.png)
 * Musts page
-![Musts](https://github.com/smnenko/game-web-site/blob/master/docs/images/Musts%20page.PNG?raw=true)
+![Musts](https://raw.githubusercontent.com/smnenko/gamemuster/master/docs/images/Musts%20page.png)
+* Game page
+![Game](https://raw.githubusercontent.com/smnenko/gamemuster/master/docs/images/Game%20page.png)
