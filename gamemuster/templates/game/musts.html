@@ -11,7 +11,7 @@
             <div class="row">
                 {% for must in musts_list %}
                     <div class="col-2 h-25">
-                        <img src="{{ must.game.logo }}" class="rounded" style="width: 80%; height: 80%" alt="">
+                        <img src="{{ must.game.cover }}" class="rounded" style="width: 80%; height: 80%" alt="">
                         <h4><a href="{% url 'game' must.game.id %}">{{ must.game.name }}</a></h4>
                         {% for genre in must.game.genres.all %}
                             <span>{{ genre }}</span>

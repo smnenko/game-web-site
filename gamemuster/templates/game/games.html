@@ -43,12 +43,12 @@
                             {% for game in page_obj %}
                                 {% if game_cycle == 'open' %}
                                     {% cycle game_cycle %}
-                                    <div class="col-12 row h-25">
+                                    <div class="col-12 row">
                                 {% endif %}
 
                                 {% if game_cycle == 'game' %}
                                     <div class="col-4 my-2">
-                                        <div class="game bg-dark h-100 w-100" style="background-image: url({{ game.logo }})">
+                                        <div class="game bg-dark" style="height: 352px; width: 254px; background-image: url({{ game.cover }})">
                                             <a class="game__title" href="{% url 'game' game.id %}">{{ game.name }}</a>
                                             <a class="game__must item" url="{% url 'must' game.id %}">
                                                 {% if game.status %}

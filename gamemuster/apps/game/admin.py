@@ -5,6 +5,7 @@ from game.models import Musts
 from game.models import Genre
 from game.models import Platform
 from game.models import Screenshot
+from game.models import Rating
 
 
 @admin.register(Game)
@@ -42,3 +43,8 @@ class PlatformAdmin(admin.ModelAdmin):
 class ScreenshotAdmin(admin.ModelAdmin):
     list_display = ['id', 'url', 'created_at']
     list_display_links = ['url']
+
+
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    pass

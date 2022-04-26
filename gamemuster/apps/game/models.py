@@ -24,13 +24,6 @@ class Platform(AbstractModel):
         return f'{self.__class__.__name__}<{self.id}, {self.name}, {self.created_at}>'
 
 
-class Screenshot(AbstractModel):
-    url = models.URLField(unique=True)
-
-    def __repr__(self):
-        return f'{self.__class__.__name__}<{self.id}, {self.url}, {self.created_at}>'
-
-
 class Rating(AbstractModel):
     users = models.FloatField(null=True)
     users_count = models.IntegerField(null=True)
@@ -39,25 +32,44 @@ class Rating(AbstractModel):
     total = models.FloatField(null=True)
     total_count = models.IntegerField(null=True)
 
+    def __str__(self):
+        return f'{self.users} {self.critics} {self.total}'
+
 
 class Game(AbstractModel):
     name = models.CharField(max_length=128)
-    logo = models.URLField()
+    cover = models.URLField()
     storyline = models.CharField(max_length=256, null=True)
     description = models.TextField(max_length=2048, null=True)
-    date_release = models.CharField(default='', max_length=64, null=True)
+    date_release = models.DateField(null=True)
 
     rating = models.ForeignKey(to=Rating, null=True, on_delete=models.CASCADE)
     genres = models.ManyToManyField(to=Genre)
     platforms = models.ManyToManyField(to=Platform)
-    screenshots = models.ManyToManyField(to=Screenshot)
 
     def __str__(self):
         return self.name
 
 
+class Screenshot(AbstractModel):
+    game = models.ForeignKey(
+        to=Game,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name='screenshots'
+    )
+    url = models.URLField(unique=True)
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}<{self.id}, {self.url}>'
+
+
 class Musts(AbstractModel):
-    game = models.ForeignKey(to=Game, on_delete=models.CASCADE)
+    game = models.ForeignKey(
+        to=Game,
+        on_delete=models.CASCADE,
+        related_name='musts'
+    )
     user = models.ForeignKey(
         to=CustomUser,
         on_delete=models.CASCADE,

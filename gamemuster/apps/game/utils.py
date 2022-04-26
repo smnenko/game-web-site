@@ -44,7 +44,10 @@ class GameTweetsParser:
         )
         tweets = []
         if response.status_code == 200:
-            data = response.json()['data']
+            response = response.json()
+            data = []
+            if 'data' in response:
+                data = response['data']
             for tweet in data:
                 author = self._parse_author(tweet['author_id'])
                 tweets.append(
@@ -72,9 +75,9 @@ class TwitchAuth:
             'client_secret': self.CLIENT_SECRET,
             'grant_type': 'client_credentials'
         }
-        response = requests.get(self.URL, data=data)
+        response = requests.post(self.URL, data=data)
         if response.status_code == 200:
-            data = response.json()['data']
+            data = response.json()
             return f"{data['token_type'].title()} {data['access_token']}"
 
     @property
@@ -96,50 +99,57 @@ class IGDBParser:
             'Client-ID': self.CLIENT_ID,
             'Authorization': TwitchAuth().authorization
         }
+        self.response = None
+        self.params = None
+        self.url = None
+
+    def parse(self):
+        self.response = requests.get(
+            self.url,
+            headers=self.headers,
+            params=self.params
+        )
+        if self.response.status_code == 200:
+            return self.response.json()
 
 
 class IGDBPlatformParser(IGDBParser):
 
-    def __init__(self):
+    def __init__(self, limit: int = 500, offset: int = 0):
         super().__init__()
         self.url = self.API + 'platforms'
-
-    def parse(self):
-        response = requests.get(
-            self.url,
-            headers=self.headers,
-            params={'fields': 'id,name'}
-        )
-        if response.status_code == 200:
-            return response.json()['data']
+        self.limit = limit
+        self.offset = offset
+        self.params = {
+            'fields': 'name',
+            'limit': self.limit,
+            'offset': self.offset
+        }
 
 
 class IGDBGenreParser(IGDBParser):
 
-    def __init__(self):
+    def __init__(self, limit: int = 500, offset: int = 0):
         super().__init__()
-        self.url = self.API + 'id,genres'
-
-    def parse(self):
-        response = requests.get(
-            self.url,
-            headers=self.headers,
-            params={'fields': 'name'}
-        )
-        if response.status_code == 200:
-            return response.json()['data']
+        self.url = self.API + 'genres'
+        self.limit = limit
+        self.offset = offset
+        self.params = {
+            'fields': 'name',
+            'limit': self.limit,
+            'offset': self.offset
+        }
 
 
-class IGBDGameParser(IGDBParser):
+class IGDBGameParser(IGDBParser):
+    NOCOVER_URL = 'images.igdb.com/igdb/image/upload/t_cover_big/nocover.png'
 
-    def __init__(self, limit: int = 0, offset: int = 0):
+    def __init__(self, limit: int = 500, offset: int = 0):
         super().__init__()
         self.url = self.API + 'games'
         self.limit = limit
         self.offset = offset
-
-    def parse(self):
-        params = {
+        self.params = {
             'fields': (
                 'name,cover.url,genres.id,platforms.id,'
                 'screenshots.url,release_dates.date,aggregated_rating,'
@@ -149,30 +159,5 @@ class IGBDGameParser(IGDBParser):
             'limit': self.limit,
             'offset': self.offset
         }
-        response = requests.get(self.url, params=params)
-        if response.status_code == 200:
-            games = []
-            data = response.json()['data']
-            for game in data:
-                games.append(Game(
-                    id=game['id'],
-                    name=game['name'],
-                    logo=game['cover']['url'],
-                    storyline=game['storyline'],
-                    description=game['summary'],
-                    release_date=game['release_dates']['date'],
-                    rating=Rating.objects.create(
-                        users=game['rating'],
-                        users_count=game['rating_count'],
-                        critics=game['aggregated_rating'],
-                        critics_count=game['aggregated_rating_count'],
-                        total=game['total_rating'],
-                        total_count=game['total_rating_count']
-                    )
-                ))
-            created_games = Game.objects.bulk_create(games)
-            for game in created_games:
-                game.genres.set(data[str(game.id)]['genres'])
-                game.platforms.set(data[str(game.id)]['platforms'])
-            return Game.objects.bulk_update(fields=('genres', 'platforms'))
+
 

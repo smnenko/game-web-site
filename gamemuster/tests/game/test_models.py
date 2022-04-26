@@ -52,7 +52,7 @@ class GameTestCase(BaseGameTestCase):
         game_fields = [i.name for i in self.game._meta.fields]
 
         self.assertIn('name', game_fields)
-        self.assertIn('logo', game_fields)
+        self.assertIn('cover', game_fields)
         self.assertIn('storyline', game_fields)
         self.assertIn('description', game_fields)
         self.assertIn('rating', game_fields)

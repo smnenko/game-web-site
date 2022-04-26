@@ -1,74 +1,82 @@
-import requests
-import environ
-from django.core.management.base import BaseCommand
-from django.conf import settings
+from datetime import datetime
 
-from game.models import Game
-from .utils import create_game_dict
-from .utils import update_game_gps
-from .utils import delete_exists_elements
+from django.core.management.base import BaseCommand
+
+from game.models import Game, Rating, Screenshot
+from game.utils import IGDBGameParser
 
 
 class Command(BaseCommand):
     help = 'Updating games database'
 
     def handle(self, *args, **options):
+        self.stdout.write(
+            f"{self.style.NOTICE('COMMAND')}"
+            f" | "
+            f"{self.style.WARNING('Games loading...')}"
+        )
 
-        env = environ.Env()
-        environ.Env.read_env(open(settings.BASE_DIR.resolve() / '.env'))
+        existing_games = Game.objects.values_list('id', flat=True)
+        games_to_add = []
 
-        twitch_data = requests.post(url='https://id.twitch.tv/oauth2/token', data={
-            'client_id': env('IGDB_CLIENT_ID'),
-            'client_secret': env('IGDB_CLIENT_SECRET'),
-            'grant_type': 'client_credentials'
-        }).json()
-        auth_data = {
-            'Client-ID': env('IGDB_CLIENT_ID'),
-            'Authorization': twitch_data['token_type'].title() + ' ' + twitch_data['access_token']
-        }
-        params = {
-            'fields': ['name, cover.url, genres.name, platforms.name, screenshots.url, release_dates.date,'
-                       'aggregated_rating, aggregated_rating_count,rating,rating_count,storyline,summary'],
-            'limit': 500
-        }
-        game_list = requests.get(url='https://api.igdb.com/v4/games', headers=auth_data, params=params).json()
+        parser = IGDBGameParser(limit=10)
+        games = parser.parse()
+        games = [i for i in games if i['id'] not in existing_games]
 
-        for game in game_list:
-            dict_init = {'cover': 'cover',
-                         'release_date': 'release_dates',
-                         'ratings_users': 'rating',
-                         'ratings_users_count': 'rating_count',
-                         'ratings_critics': 'aggregated_rating',
-                         'ratings_critics_count': 'aggregated_rating_count',
-                         'short_description': 'storyline',
-                         'description': 'summary'
-                         }
-
-            game_dict = create_game_dict(dict_init, game)
-
-            if Game.objects.filter(id=game['id']).exists():
-                print(f"Database already consists {game['name']}")
+        for game in games:
+            if 'cover' in game:
+                game['cover']['url'] = game['cover']['url'].replace('t_thumb', 't_cover_big')
             else:
-                game_obj = Game.objects.create(
-                    id=game['id'],
-                    name=game['name'],
-                    logo=game_dict['cover'],
-                    date_release=game_dict['release_date'],
-                    ratings_users=game_dict['ratings_users'],
-                    ratings_users_count=game_dict['ratings_users_count'],
-                    ratings_critics=game_dict['ratings_critics'],
-                    ratings_critics_count=game_dict['ratings_critics_count'],
-                    description=game_dict['description'],
-                    short_description=game_dict['short_description'],
+                game.update({'cover': {'url': IGDBGameParser.NOCOVER_URL}})
+
+            if 'screenshots' in game:
+                game['screenshots'] = [
+                    i['url'].replace('t_thumb', 't_original')
+                    for i in game['screenshots']
+                ]
+
+            rating = None
+            if (
+                'rating' in game or
+                'rating_count' in game or
+                'aggregated_rating' in game or
+                'aggregated_rating_count' in game or
+                'total_rating' in game or
+                'total_rating_count' in game
+            ):
+                rating = Rating.objects.create(
+                    users=game.get('rating'),
+                    users_count=game.get('rating_count'),
+                    critics=game.get('aggregated_rating'),
+                    critics_count=game.get('aggregated_rating_count'),
+                    total=game.get('total_rating'),
+                    total_count=game.get('total_rating_count')
                 )
-                genres, platforms, screenshots = update_game_gps(game)
 
-                for list_ in delete_exists_elements(genres, platforms, screenshots):
-                    if list_:
-                        type(list_[0]).objects.bulk_create(list_)
+            release_date = None
+            if 'release_dates' in game:
+                release_date = datetime.fromtimestamp(
+                    min(i['date'] for i in game['release_dates'])
+                ).date()
 
-                game_obj.genres.set(genres)
-                game_obj.platforms.set(platforms)
-                game_obj.screenshots.set(screenshots)
+            games_to_add.append(Game(
+                id=game['id'],
+                name=game['name'],
+                cover=game['cover']['url'],
+                storyline=game.get('storyline'),
+                description=game.get('summary'),
+                date_release=release_date,
+                rating=rating
+            ))
 
-        self.stdout.write(self.style.SUCCESS('Games successfully updated'))
+        created_games = Game.objects.bulk_create(games_to_add)
+        for i, game in enumerate(created_games):
+            [Screenshot.objects.create(game=game, url=x) for x in games[i].get('screenshots', [])]
+            game.genres.set(x['id'] for x in games[i].get('genres', []))
+            game.platforms.set(x['id'] for x in games[i].get('platforms', []))
+
+        self.stdout.write(
+            f"{self.style.NOTICE('COMMAND')}"
+            f" | "
+            f"{self.style.SUCCESS(f'{len(games_to_add)} games successfully loaded')}"
+        )

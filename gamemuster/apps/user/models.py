@@ -22,10 +22,10 @@ class Avatar(AbstractModel):
 
 class CustomUser(AbstractModel, AbstractBaseUser, PermissionsMixin):
     username = models.CharField(unique=True, max_length=16)
-    email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=64)
-    last_name = models.CharField(max_length=64)
-    birth_date = models.DateField(auto_now=False)
+    email = models.EmailField(unique=True, null=True)
+    first_name = models.CharField(max_length=64, null=True)
+    last_name = models.CharField(max_length=64, null=True)
+    birth_date = models.DateField(null=True)
     is_staff = models.BooleanField(default=False)
 
     avatar = models.ForeignKey(to=Avatar, on_delete=models.CASCADE, default=1)
