@@ -1,24 +1,5 @@
 @import "./variables.scss";
 
-* {
-    margin: 0;
-    padding: 0;
-    color: white;
-}
-
-a {
-    text-decoration: none;
-    color: white;
-
-    &:hover {
-        color: lightgray;
-    }
-
-    &:after {
-        color: white;
-    }
-}
-
 html {
     height: 100%;
 }
@@ -30,11 +11,49 @@ body {
     font-style: normal;
     font-weight: 400;
     font-size: 1.1rem;
+    color: white;
+}
+
+.text-warning {
+    color: $orange;
+}
+
+.text-accent {
+    color: $yellow;
+}
+
+.nav-item .active {
+    color: $orange !important;
+}
+
+.nav-link {
+    @extend .nav-link;
+    display: flex;
+    justify-items: end;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: white !important;
+    padding: 1.2rem 20px;
+
+
+    &:hover {
+        @extend .nav-link:hover;
+        color: $orange !important;
+    }
+
+    &:active {
+        @extend .nav-link:active;
+        color: $orange !important;
+    }
 }
 
 .background-black {
     background: black;
     border-radius: 20px;
+}
+
+.background-dark {
+    background: $background;
 }
 
 .font-roboto {
@@ -173,12 +192,6 @@ body {
 
 .form__errors__error {
     color: #ff1768;
-}
-
-.field {
-    border: 2px solid $yellow;
-    box-sizing: border-box;
-    border-radius: 5px;
 }
 
 input {

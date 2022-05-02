@@ -5,93 +5,101 @@
 {% endblock %}
 
 {% block content %}
-    <div class="content__games d-flex h-100 align-items-center">
-        <div class="content__games__container w-100 h-75">
-            <div class="h-100 background-black p-3">
-                <div class="row align-items-center my-1">
-                    <h4 class="col-2">Filter</h4>
-                    <div class="col-10 w-50 mx-auto d-flex align-items-center justify-content-between">
-                        <a class="sort__item" href="?ordering=name&order=asc">Alphabet</a>
-                        <a class="sort__item" href="?ordering=date_release&order=asc">Newest</a>
-                        <a class="sort__item">Popular</a>
-                        <a class="sort__item" href="?ordering=ratings_critics&order=asc">Rating</a>
+    <div class="container my-3" style="height: auto">
+        <div class="content background-black">
+            <div class="row p-2">
+                <div class="col-12 col-lg-2">
+                    <div class="div m-2">
+                        <form class="mb-2" onsubmit="filterByName()">
+                            <label>
+                                <input type="text" name="name" id="gameName" class="w-100 border-bottom p-0 py-2" placeholder="Search by name" style="color: white">
+                            </label>
+                        </form>
+
+                        <div>
+                            <span class="fw-bold">Sort by:</span>
+                            <div class="ps-3 py-2">
+                                <div role="button" class="sortItem" name="name">Alphabet</div>
+                                <div role="button" class="sortItem" name="">Popular</div>
+                                <div role="button" class="sortItem" name="rating__critics">Rating</div>
+                                <div role="button" class="sortItem" name="date_release">Newest</div>
+                            </div>
+                        </div>
+
+                        <div class="py-2">
+                            <span class="fw-bold">Genres:</span>
+                            <div class="ps-3 py-1">
+                                {% for genre in genres %}
+                                    {% if forloop.counter <= 5 %}
+                                        <div role="button" class="genre">{{ genre }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="collapse" id="collapseGenres">
+                                    {% for genre in genres %}
+                                        {% if forloop.counter > 5 %}
+                                            <div role="button" class="genre">{{ genre }}</div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <a class="btn btn-outline-warning w-100" data-bs-toggle="collapse" href="#collapseGenres" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                More
+                            </a>
+                        </div>
+
+                        <div class="py-2">
+                            <span class="fw-bold">Platforms:</span>
+                            <div class="ps-3 py-1">
+                                {% for platform in platforms %}
+                                    {% if forloop.counter <= 5 %}
+                                        <div role="button" class="platform">{{ platform }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="collapse" id="collapsePlatforms">
+                                    {% for platform in platforms %}
+                                        {% if forloop.counter > 5 %}
+                                            <div role="button" class="platform">{{ platform }}</div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <a class="btn btn-outline-warning w-100" data-bs-toggle="collapse" href="#collapsePlatforms" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                More
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <div class="row h-100">
-                    <div class="col-2">
-                        <div class="field w-100 my-2">
-                            <input class="w-100" type="text" placeholder="Title">
-                        </div>
-                        <div class="field w-100 my-2">
-                            <input class="w-100" type="text" placeholder="Genres">
-                        </div>
-                        <div class="field w-100 my-2">
-                            <input class="w-100" type="text" placeholder="Platforms">
-                        </div>
-                    </div>
-                    <div class="col-10 mb-5">
-{#                        <div class="row h-100 w-100 align-items-center" style="overflow-y: auto">#}
-{#                            <div class="col-3 h-25 px-1 my-1"><div class="game bg-dark h-100">Game 1</div></div>#}
-{#                            <div class="col-3 h-25 px-1 my-1"><div class="game bg-dark h-100">Game 1</div></div>#}
-{#                            <div class="col-3 h-25 px-1 my-1"><div class="game bg-dark h-100">Game 1</div></div>#}
-{#                            <div class="col-3 h-25 px-1 my-1"><div class="game bg-dark h-100">Game 1</div></div>#}
-{#                            <div class="col-3 h-25 px-1 my-1"><div class="game bg-dark h-100">Game 1</div></div>#}
-{#                        </div>#}
 
-                        <div class="d-flex flex-column h-100 w-100" style="overflow-y: auto">
-                            {% cycle 'open' 'game' 'game' 'game' 'close' as game_cycle silent %}
-                            {% for game in page_obj %}
-                                {% if game_cycle == 'open' %}
-                                    {% cycle game_cycle %}
-                                    <div class="col-12 row">
-                                {% endif %}
-
-                                {% if game_cycle == 'game' %}
-                                    <div class="col-4 my-2">
-                                        <div class="game bg-dark" style="height: 352px; width: 254px; background-image: url({{ game.cover }})">
-                                            <a class="game__title" href="{% url 'game' game.id %}">{{ game.name }}</a>
-                                            <a class="game__must item" url="{% url 'must' game.id %}">
-                                                {% if game.status %}
-                                                    UnMust
-                                                {% else %}
-                                                    Must
-                                                {% endif %}
-                                            </a>
+                <div class="col-12 col-lg-10">
+                    <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-2">
+                        {% for game in game_list %}
+                            <div class="col">
+                                <div class="card text-white bg-dark h-100">
+                                    <img class="card-img-top" style="height: 16rem" src="{% if game.cover %}{{ game.cover }}{% else %}//images.igdb.com/igdb/image/upload/t_cover_big/nocover.png{% endif %}" alt="">
+                                    {% if user.is_authenticated %}
+                                        <div class="card-img-overlay p-0" style="opacity: 70%">
+                                            <span class="item btn btn-secondary rounded pe-auto font-monospace w-100" url="{% url 'must' game.id %}">{% if game.status %}UnMust{% else %}Must{% endif %}</span>
+                                        </div>
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <div class="card-subtitle">
+                                            <span class="badge bg-secondary" style="font-size: 0.8rem">Strategy</span>
+                                            <span class="badge bg-secondary" style="font-size: 0.8rem">Indie</span>
+                                        </div>
+                                        <a class="card-title h4 text-decoration-none text-white stretched-link mt-2" href="{% url 'game' game.id %}">{{ game.name|truncatewords:5 }}</a>
+                                        <div class="card-text">
+                                            {% if game.storyline %}
+                                                {{ game.storyline }}
+                                            {% elif game.description %}
+                                                {{ game.description|truncatewords:10 }}
+                                            {% else %}
+                                                No description provided
+                                            {% endif %}
                                         </div>
                                     </div>
-                                    {% cycle game_cycle %}
-                                {% endif %}
-
-                                {% if game_cycle == 'close' %}
-                                    </div>
-                                    {% cycle game_cycle %}
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                        <div class="d-flex pagination bg-dark mt-4 justify-content-between m-auto">
-                            {% if page_obj.num_pages and page_obj.has_next or page_obj.num_pages and page_obj.has_prev %}
-                                {% if page_obj.has_previous %}
-                                    {% if page_obj.previous_page_number != 1 %}
-                                        <a class="page" onclick="toPage(1)">1</a>
-                                    {% endif %}
-                                    <a class="page" onclick="toPage({{ page_obj.previous_page_number }})">{{ page_obj.previous_page_number }}</a>
-                                {% endif %}
-                                <span class="page page-active">{{ page_obj.number }}</span>
-                                {% if page_obj.has_next %}
-                                    <a class="page" onclick="toPage({{ page_obj.next_page_number }})">{{ page_obj.next_page_number }}</a>
-                                    {% if page_obj.number == 1 and paginator.num_pages > 5 %}
-                                        <a class="page" onclick="toPage(3)">3</a>
-                                        <a class="page" onclick="toPage(4)">4</a>
-                                    {% endif %}
-                                    {% if page_obj.number == 2 and paginator.num_pages > 6 %}
-                                        <a class="page" onclick="toPage(4)">4</a>
-                                    {% endif %}
-                                    {% if page_obj.number != page_obj.num_pages and page_obj.next_page_number != page_obj.paginator.num_pages %}
-                                        <a class="page" onclick="toPage({{ page_obj.paginator.num_pages }})">{{ page_obj.paginator.num_pages }}</a>
-                                    {% endif %}
-                                {% endif %}
-                            {% endif %}
-                        </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

@@ -9,25 +9,31 @@ from game.utils import IGDBGameParser
 class Command(BaseCommand):
     help = 'Updating games database'
 
-    def handle(self, *args, **options):
+    def log(self, message):
         self.stdout.write(
             f"{self.style.NOTICE('COMMAND')}"
             f" | "
-            f"{self.style.WARNING('Games loading...')}"
+            f"{self.style.SUCCESS(message)}"
         )
+
+    def handle(self, *args, **options):
+        self.log('Games loading...')
 
         existing_games = Game.objects.values_list('id', flat=True)
         games_to_add = []
 
-        parser = IGDBGameParser(limit=10)
+        parser = IGDBGameParser(limit=20)
         games = parser.parse()
+
+        self.log('Response successfully received')
+
         games = [i for i in games if i['id'] not in existing_games]
 
         for game in games:
             if 'cover' in game:
                 game['cover']['url'] = game['cover']['url'].replace('t_thumb', 't_cover_big')
             else:
-                game.update({'cover': {'url': IGDBGameParser.NOCOVER_URL}})
+                game.update({'cover': {'url': None}})
 
             if 'screenshots' in game:
                 game['screenshots'] = [
@@ -75,8 +81,4 @@ class Command(BaseCommand):
             game.genres.set(x['id'] for x in games[i].get('genres', []))
             game.platforms.set(x['id'] for x in games[i].get('platforms', []))
 
-        self.stdout.write(
-            f"{self.style.NOTICE('COMMAND')}"
-            f" | "
-            f"{self.style.SUCCESS(f'{len(games_to_add)} games successfully loaded')}"
-        )
+        self.log(f'{len(games_to_add)} games successfully loaded')

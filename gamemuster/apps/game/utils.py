@@ -142,7 +142,6 @@ class IGDBGenreParser(IGDBParser):
 
 
 class IGDBGameParser(IGDBParser):
-    NOCOVER_URL = 'images.igdb.com/igdb/image/upload/t_cover_big/nocover.png'
 
     def __init__(self, limit: int = 500, offset: int = 0):
         super().__init__()

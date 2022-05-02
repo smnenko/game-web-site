@@ -4,7 +4,7 @@ from django.views import View
 
 
 class IndexListView(View):
-    template_name = 'index.html'
+    template_name = 'core/landing.html'
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:

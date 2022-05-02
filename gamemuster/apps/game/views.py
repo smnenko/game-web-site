@@ -1,6 +1,5 @@
 from typing import Union
 
-from django.conf import settings
 from django.db.models import Count
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -11,8 +10,7 @@ from django.views.generic.edit import DeleteView
 from django.utils.decorators import method_decorator
 
 from core.mixins import OrderingMixin, MustSingleRequiredMixin, MustMultipleRequiredMixin
-from game.models import Game
-from game.models import Musts
+from game.models import Game, Musts, Genre, Platform
 from game.utils import GameTweetsParser
 
 
@@ -26,9 +24,9 @@ class AbstractMustsView:
 
 class GameListView(MustMultipleRequiredMixin, OrderingMixin, AbstractGameView, ListView):
     template_name = 'game/games.html'
-    available_orderings = ['name', 'date_release', 'ratings_critics']
+    available_orderings = ['name', 'date_release', 'rating__critics']
     available_filtering = ['name', 'genres', 'platforms']
-    paginate_by = 15
+    paginate_by = 20
 
     @staticmethod
     def filter_queryset(queryset, key: str, value: Union[str, list]):
@@ -45,6 +43,12 @@ class GameListView(MustMultipleRequiredMixin, OrderingMixin, AbstractGameView, L
                 queryset = self.filter_queryset(queryset, key, value)
 
         return queryset
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['genres'] = Genre.objects.values_list('name', flat=True)
+        context['platforms'] = Platform.objects.values_list('name', flat=True)
+        return context
 
 
 class GameView(LoginRequiredMixin, PermissionRequiredMixin, MustSingleRequiredMixin, AbstractGameView, DetailView):
