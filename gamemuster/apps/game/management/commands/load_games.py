@@ -16,13 +16,16 @@ class Command(BaseCommand):
             f"{self.style.SUCCESS(message)}"
         )
 
+    def add_arguments(self, parser):
+        parser.add_argument('--offset', '-o', type=int)
+
     def handle(self, *args, **options):
         self.log('Games loading...')
 
         existing_games = Game.objects.values_list('id', flat=True)
         games_to_add = []
 
-        parser = IGDBGameParser(limit=20)
+        parser = IGDBGameParser(limit=500, offset=options.get('offset'))
         games = parser.parse()
 
         self.log('Response successfully received')
@@ -34,6 +37,9 @@ class Command(BaseCommand):
                 game['cover']['url'] = game['cover']['url'].replace('t_thumb', 't_cover_big')
             else:
                 game.update({'cover': {'url': None}})
+
+            if 'storyline' in game:
+                game['storyline'] = game['storyline'][:256]
 
             if 'screenshots' in game:
                 game['screenshots'] = [
@@ -60,9 +66,9 @@ class Command(BaseCommand):
                 )
 
             release_date = None
-            if 'release_dates' in game:
+            if 'release_dates' in game and 'date' in game['release_dates']:
                 release_date = datetime.fromtimestamp(
-                    min(i['date'] for i in game['release_dates'])
+                    min(i.get('date') for i in game['release_dates'])
                 ).date()
 
             games_to_add.append(Game(

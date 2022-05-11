@@ -1,12 +1,8 @@
+from datetime import datetime
+
 import requests
 from django.conf import settings
 from django.core.cache import cache
-
-from game.models import Game, Rating
-
-
-def _clear_name(name: str):
-    return ''.join(i for i in name if i.isalnum()).lower()
 
 
 class Tweet:
@@ -22,6 +18,10 @@ class GameTweetsParser:
     AUTHOR_URL = API + '/users/{}'
     HEADERS = {'Authorization': f'Bearer {settings.TWITTER_BEARER}'}
 
+    @staticmethod
+    def _clear_name(name: str):
+        return ''.join(i for i in name if i.isalnum()).lower()
+
     def _parse_author(self, author_id: int):
         params = {'user.fields': 'username'}
         response = requests.get(
@@ -34,7 +34,7 @@ class GameTweetsParser:
 
     def _parse(self, game_name: str):
         params = {
-            'query': f'#{_clear_name(game_name)}',
+            'query': f'#{game_name}',
             'tweet.fields': 'text,created_at,author_id',
         }
         response = requests.get(
@@ -51,16 +51,17 @@ class GameTweetsParser:
             for tweet in data:
                 author = self._parse_author(tweet['author_id'])
                 tweets.append(
-                    Tweet(author, tweet['text'], tweet['created_at'])
+                    Tweet(author, tweet['text'], datetime.strptime(tweet['created_at'], '%Y-%m-%dT%H:%M:%S.%fZ'))
                 )
         return tweets
 
     def parse(self, game_name: str):
-        if cache.get(f'{game_name}__tweets'):
-            return cache.get(f'{game_name}__tweets')
+        clear_game_name = self._clear_name(game_name)
+        if cache.get(f'{clear_game_name}__tweets'):
+            return cache.get(f'{clear_game_name}__tweets')
 
-        tweets = self._parse(game_name)
-        cache.set(f'{game_name}__tweets', tweets, 60 * 10)
+        tweets = self._parse(clear_game_name)
+        cache.set(f'{clear_game_name}__tweets', tweets, 60 * 10)
         return tweets
 
 

@@ -1,12 +1,26 @@
 from django import forms
 
-from .models import Avatar
+from .models import Avatar, CustomUser
 
 
-class UserSettingsForm(forms.ModelForm):
+class AvatarUpdateForm(forms.ModelForm):
     class Meta:
         model = Avatar
         fields = ('avatar',)
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ('first_name', 'last_name')
+
+
+class UserUpdateForm(forms.ModelForm):
+    password_confirm = forms.CharField(required=True, widget=forms.PasswordInput())
+
+    class Meta:
+        model = CustomUser
+        fields = ('email',)
 
 
 class LoginForm(forms.Form):

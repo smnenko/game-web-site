@@ -16,7 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
           rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% sass_src "scss/styles.scss" %}" type="text/css">
+    <link rel="stylesheet" href="{% sass_src "scss/landing.scss" %}" type="text/css">
 </head>
 <body>
     <div class="container-xxl">
@@ -24,19 +24,19 @@
             <div class="header__logo">
                 <a href="{% url 'index' %}"><img src="{% static 'assets/logo.png' %}" class="img-fluid" alt="" /></a>
             </div>
-            <div class="header__menu d-flex justify-content-evenly">
+            <div class="header__menu row ms-5">
                 {% if not user.is_authenticated %}
-                    <div class="header__menu__item">
+                    <div class="header__menu__item col">
                             <a class="text-decoration-none" href="{% url 'games' %}">Games</a>
                     </div>
                 {% endif %}
-                <div class="header__menu__item">
+                <div class="header__menu__item col">
                     <a class="text-decoration-none" href="">Blog</a>
                 </div>
-                <div class="header__menu__item">
+                <div class="header__menu__item col">
                     <a class="text-decoration-none" href="">About</a>
                 </div>
-                <div class="header__menu__item">
+                <div class="header__menu__item col">
                     {% if user.is_authenticated %}
                         <a class="text-decoration-none" href="{% url 'logout' %}">Logout</a>
                     {% else %}
@@ -50,15 +50,15 @@
             <div class="content__welcome d-flex h-75 align-items-center">
                 <div class="content__welcome__container">
                     <style>
-                    body {
-                        background-image: url("{% static 'assets/background-full-v2.png' %}");
-                        background-position: center center;
-                        background-repeat: no-repeat;
-                        background-attachment: fixed;
-                        background-size: cover;
-                        background-color: #050E11;
-                    }
-                </style>
+                        body {
+                            background-image: url("{% static 'assets/background-full-v2.png' %}");
+                            background-position: center center;
+                            background-repeat: no-repeat;
+                            background-attachment: fixed;
+                            background-size: cover;
+                            background-color: #050E11;
+                        }
+                    </style>
                 <h1 class="content__title font-roboto">Let’s find a new generation  of awesome video games together</h1>
                 <div class="content__caption mt-4">Open source product to find games as for you with recommendations list</div>
 

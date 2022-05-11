@@ -1,0 +1,64 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+    {{ user|title }}'s Settings
+{% endblock %}
+
+{% block content %}
+    <div class="container my-3">
+        <div class="content background-black">
+            <div class="p-3 w-100">
+                {% for message in messages %}
+                    <div class="text-danger">Error: {{ message }}</div>
+                {% endfor %}
+                {% cycle 'Avatar Settings' 'Profile Settings' 'User Settings' as settings silent %}
+                {% for form in forms %}
+                    <h3>{{ settings }}</h3>
+                    <hr>
+                    <form action="{% url 'profile_settings' %}" method="POST" {% if settings == 'Avatar Settings' %}enctype="multipart/form-data"{% endif %} class="w-25 m-auto">
+                        {% if settings == 'Avatar Settings' %}
+                            <img src="{{ user.avatar.avatar_large.url }}" class="w-100" alt="">
+                        {% endif %}
+                    
+                        {% csrf_token %}
+                        {% for key, field in form.errors.items %}
+                            {% for error in field %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for field in form %}
+                            <div class="my-2">
+                                {{ field | placeholder:field.label | classes:'w-100 border-bottom text-white p-0 py-2' }}
+                            </div>
+                        {% endfor %}
+
+                        <input type="hidden" name="selected_form" value="{{ forloop.counter0 }}">
+                        <button class="btn btn-outline-warning w-100 my-2" type="submit">Update</button>
+                    </form>
+                    {% cycle settings %}
+                {% endfor %}
+{#                <h3>Avatar Settings</h3>#}
+{#                <h3>User Settings</h3>#}
+{#                <form action="{% url 'profile_settings' %}" method="POST" class="w-25 m-auto">#}
+{#                    {% for key, field in form.errors.items %}#}
+{#                        {% for error in field %}#}
+{#                            <div class="text-danger">{{ error }}</div>#}
+{#                        {% endfor %}#}
+{#                    {% endfor %}#}
+{##}
+{#                    {% csrf_token %}#}
+{#                    <div class="my-2">#}
+{#                        {{ form.first_name | placeholder:'First name' | classes:'w-100 border-bottom text-white p-0 py-2' }}#}
+{#                    </div>#}
+{#                    <div class="my-2">#}
+{#                        {{ form.last_name | placeholder:'Last name' | classes:'w-100 border-bottom text-white p-0 py-2' }}#}
+{#                    </div>#}
+{#                    <div class="my-2">#}
+{#                        {{ form.email | placeholder:'Email' | classes:'w-100 border-bottom text-white p-0 py-2' }}#}
+{#                    </div>#}
+{#                    <button class="btn btn-outline-warning w-100 my-2" type="submit">Update</button>#}
+{#                </form>#}
+            </div>
+        </div>
+    </div>
+{% endblock %}

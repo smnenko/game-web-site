@@ -10,7 +10,7 @@ from game.models import Rating
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'get_genres', 'get_platforms']
+    list_display = ['id', 'name', 'get_genres', 'get_platforms', 'cover', 'created_at']
     list_display_links = ['name']
     list_filter = ['genres', 'platforms']
 
@@ -41,8 +41,8 @@ class PlatformAdmin(admin.ModelAdmin):
 
 @admin.register(Screenshot)
 class ScreenshotAdmin(admin.ModelAdmin):
-    list_display = ['id', 'url', 'created_at']
-    list_display_links = ['url']
+    list_display = ['id', 'game', 'url', 'created_at']
+    list_display_links = ['game']
 
 
 @admin.register(Rating)

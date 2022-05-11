@@ -17,9 +17,12 @@ redis = "*"
 factory-boy = "*"
 libsass = "*"
 django-sass-processor = "*"
+django-compressor = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 pytest-django = "*"
+libsass = "*"
 
 [requires]
 python_version = "3.9"

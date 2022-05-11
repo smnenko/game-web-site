@@ -9,5 +9,4 @@ urlpatterns = [
     path('<int:pk>/delete', views.GameDeleteView.as_view(), name='game_delete'),
     path('musts', views.MustsListView.as_view(), name='musts'),
     path('<int:pk>/must', views.MustView.as_view(), name='must'),
-    path('search', views.SearchListView.as_view(), name='search'),
 ]

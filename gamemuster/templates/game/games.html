@@ -20,7 +20,6 @@
                             <span class="fw-bold">Sort by:</span>
                             <div class="ps-3 py-2">
                                 <div role="button" class="sortItem" name="name">Alphabet</div>
-                                <div role="button" class="sortItem" name="">Popular</div>
                                 <div role="button" class="sortItem" name="rating__critics">Rating</div>
                                 <div role="button" class="sortItem" name="date_release">Newest</div>
                             </div>
@@ -81,15 +80,16 @@
                                             <span class="item btn btn-secondary rounded pe-auto font-monospace w-100" url="{% url 'must' game.id %}">{% if game.status %}UnMust{% else %}Must{% endif %}</span>
                                         </div>
                                     {% endif %}
-                                    <div class="card-body">
+                                    <div class="card-body" style="transform: rotate(0)">
                                         <div class="card-subtitle">
-                                            <span class="badge bg-secondary" style="font-size: 0.8rem">Strategy</span>
-                                            <span class="badge bg-secondary" style="font-size: 0.8rem">Indie</span>
+                                            {% for genre in game.prefetched_genres %}
+                                                <span class="badge bg-secondary" style="font-size: 0.8rem">{{ genre.name }}</span>
+                                            {% endfor %}
                                         </div>
                                         <a class="card-title h4 text-decoration-none text-white stretched-link mt-2" href="{% url 'game' game.id %}">{{ game.name|truncatewords:5 }}</a>
                                         <div class="card-text">
                                             {% if game.storyline %}
-                                                {{ game.storyline }}
+                                                {{ game.storyline|truncatewords:15 }}
                                             {% elif game.description %}
                                                 {{ game.description|truncatewords:10 }}
                                             {% else %}
@@ -100,6 +100,30 @@
                                 </div>
                             </div>
                         {% endfor %}
+                    </div>
+                    <div class="row justify-content-center mt-2">
+                        {% if page_obj.paginator.num_pages > 1 %}
+                            {% if page_obj.has_previous %}
+                                {% if page_obj.previous_page_number != 1 %}
+                                    <a class="col-1 p-2 text-white text-decoration-none text-center" onclick="toPage(1)" style="cursor: pointer">1</a>
+                                {% endif %}
+                                <a class="col-1 p-2 text-white text-decoration-none text-center" onclick="toPage({{ page_obj.previous_page_number }})" style="cursor: pointer">{{ page_obj.previous_page_number }}</a>
+                            {% endif %}
+                            <span class="col-1 p-2 text-warning text-center">{{ page_obj.number }}</span>
+                            {% if page_obj.has_next %}
+                                <a class="col-1 p-2 text-white text-decoration-none text-center" onclick="toPage({{ page_obj.next_page_number }})" style="cursor: pointer">{{ page_obj.next_page_number }}</a>
+                                {% if page_obj.number == 1 and paginator.num_pages >= 5 %}
+                                    <a class="col-1 p-2 text-white text-decoration-none text-center" onclick="toPage(3)" style="cursor: pointer">3</a>
+                                    <a class="col-1 p-2 text-white text-decoration-none text-center" onclick="toPage(4)" style="cursor: pointer">4</a>
+                                {% endif %}
+                                {% if page_obj.number == 2 and paginator.num_pages >= 5 %}
+                                    <a class="col-1 p-2 text-white text-decoration-none text-center" onclick="toPage(4)" style="cursor: pointer">4</a>
+                                {% endif %}
+                                {% if page_obj.number != page_obj.num_pages and page_obj.next_page_number != page_obj.paginator.num_pages %}
+                                    <a class="col-1 p-2 text-white text-decoration-none text-center" onclick="toPage({{ page_obj.paginator.num_pages }})" style="cursor: pointer">{{ page_obj.paginator.num_pages }}</a>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
             </div>

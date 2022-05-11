@@ -26,7 +26,8 @@ TWITTER_BEARER = env('TWITTER_BEARER')
 THIRD_PARTY_APPS = [
     'imagekit',
     'debug_toolbar',
-    'sass_processor'
+    'sass_processor',
+    'corsheaders'
 ]
 
 PROJECT_APPS = [
@@ -51,6 +52,7 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -117,9 +119,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
+CORS_ALLOWED_ORIGINS = [f'https://{i}' for i in ALLOWED_HOSTS]
+CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 
 LANGUAGE_CODE = 'en-us'
 
@@ -162,4 +163,3 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'sass_processor.finders.CssFinder',
 ]
-SASS_PROCESSOR_ROOT = STATIC_ROOT

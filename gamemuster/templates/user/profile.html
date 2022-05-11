@@ -1,46 +1,41 @@
 {% extends "core/base.html" %}
 
 {% block title %}
-    {{ user|title }} Profile
+    {{ user|title }}'s Profile
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="profile col-8 font-weight-bold">
-            <h2 class="font-weight-bold pl-5 pt-3">My Profile</h2>
-            <div class="mt-4 ml-4">
-                <img src="/user{{ MEDIA_URL }}{{ user_detail.avatar.avatar_medium.url }}" alt="" class="rounded float-left">
-                <div class="float-left ml-4 w-25">
-                    <p class="row">
-                        <span class="col-5 text-right text-secondary">Username</span>
-                        <span class="col-7 border-left">{{ user.username }}</span>
-                    </p>
-                    <p class="row">
-                        <span class="col-5 text-right text-secondary">Email</span>
-                        <span class="col-7 border-left">{{ user.email }}</span>
-                    </p>
-                    <p class="row">
-                        <span class="col-5 text-right text-secondary">First Name</span>
-                        <span class="col-7 border-left">{{ user.first_name }}</span>
-                    </p>
-                    <p class="row">
-                        <span class="col-5 text-right text-secondary">Last Name</span>
-                        <span class="col-7 border-left">{{ user.last_name }}</span>
-                    </p>
-                    <p class="row">
-                        <span class="col-5 text-right text-secondary">Age</span>
-                        <span class="col-7 border-left">{{ user_detail.age }}</span>
-                    </p>
+    <div class="container my-3" style="height: auto">
+        <div class="content background-black">
+            <div class="row p-3">
+                <div class="col-2">
+                    <img src="{{ customuser.avatar.avatar_medium.url }}" class="rounded w-100" alt="">
+                </div>
+                <div class="col-10">
+                    <table class="w-50">
+                        <tr>
+                            <td class="fst-italic">Username</td>
+                            <td>{{ customuser.username }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fst-italic">Email</td>
+                            <td>{% if customuser == user %}{{ customuser.email }}{% else %}hidden{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td class="fst-italic">Name</td>
+                            <td>{{ customuser.first_name }} {{ customuser.last_name }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fst-italic">Age</td>
+                            <td>{{ customuser.age }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fst-italic">Musts</td>
+                            <td>{{ customuser.musts.all|length }} games</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
-        </div>
-        <div class="col-4 pt-3">
-            <h2>Settings:</h2>
-            <form action="{% url 'profile_update' user.pk %}" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-danger font-weight-bold float-left">Submit</button>
-            </form>
         </div>
     </div>
 {% endblock %}

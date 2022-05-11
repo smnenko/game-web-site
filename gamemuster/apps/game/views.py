@@ -1,6 +1,6 @@
 from typing import Union
 
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.decorators.csrf import csrf_exempt
@@ -29,18 +29,31 @@ class GameListView(MustMultipleRequiredMixin, OrderingMixin, AbstractGameView, L
     paginate_by = 20
 
     @staticmethod
-    def filter_queryset(queryset, key: str, value: Union[str, list]):
+    def apply_filter(queryset, key: str, value: Union[str, list]):
         key = f"{key}{'__icontains' if isinstance(value, str) else '__name__in'}"
         return queryset.filter(**{key: value})
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        queryset = (
+            queryset
+            .filter(is_active=True)
+            .prefetch_related(
+                Prefetch(
+                    lookup='genres',
+                    queryset=Genre.objects.all(),
+                    to_attr='prefetched_genres'
+                )
+            )
+            .order_by('cover')
+        )
+
         for key in self.available_filtering:
             value = self.request.GET.get(key)
             if value:
                 if ',' in value:
                     value = value.split(',')
-                queryset = self.filter_queryset(queryset, key, value)
+                queryset = self.apply_filter(queryset, key, value)
 
         return queryset
 
@@ -59,11 +72,6 @@ class GameView(LoginRequiredMixin, PermissionRequiredMixin, MustSingleRequiredMi
         context = super().get_context_data()
         context['tweets'] = GameTweetsParser().parse(self.object.name)
         return context
-
-
-class SearchListView(MustMultipleRequiredMixin, AbstractGameView, ListView):
-    template_name = 'game/index.html'
-    context_object_name = 'page_obj'
 
 
 @method_decorator(csrf_exempt, name='dispatch')
