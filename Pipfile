@@ -19,6 +19,7 @@ libsass = "*"
 django-sass-processor = "*"
 django-compressor = "*"
 django-cors-headers = "*"
+docutils = "*"
 
 [dev-packages]
 pytest-django = "*"

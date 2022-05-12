@@ -17,7 +17,7 @@
                     <hr>
                     <form action="{% url 'profile_settings' %}" method="POST" {% if settings == 'Avatar Settings' %}enctype="multipart/form-data"{% endif %} class="w-25 m-auto">
                         {% if settings == 'Avatar Settings' %}
-                            <img src="{{ user.avatar.avatar_large.url }}" class="w-100" alt="">
+                            <img src="{{ user.avatar.avatar.url }}" class="w-100" alt="">
                         {% endif %}
                     
                         {% csrf_token %}
