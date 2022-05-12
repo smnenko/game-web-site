@@ -4,25 +4,27 @@ services:
 
   nginx:
     container_name: test_deploy_nginx
-    build: ./nginx
+    build: ./deploy/nginx
     ports:
         - 8008:80
     depends_on:
         - web
 
-  rabbitmq:
-    container_name: rabbitmq
-    hostname: rabbitmq
-    image: rabbitmq
+  redis:
+    image: "redis:alpine"
+    command: redis-server
     ports:
-    - 5672:5672
+    - 6379:6379
+    volumes:
+      - $PWD/redis-data:/var/lib/redis
+      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
 
   celery_worker:
     container_name: celery_worker
     depends_on:
       - web
       - db
-      - rabbitmq
+      - redis
       - celery_beat
     image: web-image
     command: "celery -A backend worker -l INFO"
@@ -32,7 +34,7 @@ services:
     depends_on:
       - web
       - db
-      - rabbitmq
+      - redis
     image: web-image
     command: "celery -A backend beat -l info"
 
@@ -46,7 +48,7 @@ services:
 
   web:
     build: .
-    command: sh -c "python3 manage.py migrate && wait && python3 manage.py loaddata initial.json && wait && gunicorn backend.wsgi:application --bind 0.0.0.0:8000"
+    command: sh -c "pipenv run ./manage.py migrate && wait && pipenv run ./manage.py loaddata initial.json && wait && pipenv run gunicorn backend.wsgi:application --bind 0.0.0.0:8000"
     volumes:
     - .:/code
     ports:

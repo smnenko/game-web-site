@@ -1,3 +1,3 @@
-web: python3 manage.py migrate && wait && python3 manage.py loaddata initial.json && wait && gunicorn backend.wsgi:application --preload --log-file -
-beat: celery -A backend beat -l info
+web: pipenv run ./manage.py collectstatic --noinput && wait && pipenv run ./manage.py compilescss && wait && pipenv run ./manage.py migrate && wait && pipenv run ./manage.py loaddata initial.json && wait && pipenv run gunicorn backend.wsgi:application --preload --log-file -
+beat: celery -A backend beat -l INFO
 worker: celery -A backend worker -l INFO

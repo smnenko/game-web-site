@@ -20,6 +20,7 @@ django-sass-processor = "*"
 django-compressor = "*"
 django-cors-headers = "*"
 docutils = "*"
+gunicorn = "*"
 
 [dev-packages]
 pytest-django = "*"

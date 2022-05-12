@@ -2,26 +2,34 @@ import os
 import sys
 from pathlib import Path
 
-import environ
 from celery.schedules import crontab
 
 PROJECT_DIR = Path(__file__).parent
 BASE_DIR = PROJECT_DIR.parent
 sys.path.append(os.path.join(PROJECT_DIR, 'apps'))
 
-env = environ.Env()
-environ.Env.read_env(open(BASE_DIR.joinpath('.env')))
+SECRET_KEY = os.environ.get('SECRET_KEY')
+DEBUG = bool(int(os.environ.get('DEBUG', 1)))
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split()
 
-SECRET_KEY = env('SECRET_KEY')
-DEBUG = env.bool('DEBUG')
-ALLOWED_HOSTS = env('ALLOWED_HOSTS').split()
+IGDB_CLIENT_ID = os.environ.get('IGDB_CLIENT_ID')
+IGDB_CLIENT_SECRET = os.environ.get('IGDB_CLIENT_SECRET')
 
-IGDB_CLIENT_ID = env('IGDB_CLIENT_ID')
-IGDB_CLIENT_SECRET = env('IGDB_CLIENT_SECRET')
+TWITTER_KEY = os.environ.get('TWITTER_KEY')
+TWITTER_SECRET = os.environ.get('TWITTER_SECRET')
+TWITTER_BEARER = os.environ.get('TWITTER_BEARER')
 
-TWITTER_KEY = env('TWITTER_KEY')
-TWITTER_SECRET = env('TWITTER_SECRET')
-TWITTER_BEARER = env('TWITTER_BEARER')
+REDIS_NAME = os.environ.get('REDIS_NAME')
+REDIS_USER = os.environ.get('REDIS_USER')
+REDIS_PASS = os.environ.get('REDIS_PASS')
+REDIS_HOST = os.environ.get('REDIS_HOST')
+REDIS_PORT = os.environ.get('REDIS_PORT')
+
+REDIS_URL = (
+    f"redis://{REDIS_USER}:{REDIS_PASS}@"
+    f"{REDIS_HOST}:{REDIS_PORT}/"
+    f"{REDIS_NAME}"
+)
 
 THIRD_PARTY_APPS = [
     'imagekit',
@@ -84,19 +92,13 @@ WSGI_APPLICATION = 'gamemuster.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env('DATABASE_NAME'),
-        'USER': env('DATABASE_USER'),
-        'PASSWORD': env('DATABASE_PASS'),
-        'HOST': env('DATABASE_HOST'),
-        'PORT': env('DATABASE_PORT'),
+        'NAME': os.environ.get('DATABASE_NAME'),
+        'USER': os.environ.get('DATABASE_USER'),
+        'PASSWORD': os.environ.get('DATABASE_PASS'),
+        'HOST': os.environ.get('DATABASE_HOST'),
+        'PORT': os.environ.get('DATABASE_PORT')
     }
 }
-
-REDIS_URL = (
-    f"redis://{env('REDIS_USER')}:{env('REDIS_PASS')}@"
-    f"{env('REDIS_HOST')}:{env('REDIS_PORT')}/"
-    f"{env('REDIS_NAME')}"
-)
 
 CACHES = {
     "default": {
