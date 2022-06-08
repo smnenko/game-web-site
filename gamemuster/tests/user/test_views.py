@@ -90,14 +90,3 @@ class ProfileViewTestCase(BaseUserAuthTestCase):
 
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'user/profile.html')
-
-    def test__profile_includes_form(self):
-        self.client.login(
-            username=self.username,
-            password=self.password
-        )
-        resp = self.client.get(self.profile_url)
-
-        self.assertEqual(resp.status_code, 200)
-        self.assertIn('form', resp.context)
-        self.assertTrue(resp.context['form'])

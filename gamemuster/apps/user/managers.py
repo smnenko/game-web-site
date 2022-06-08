@@ -13,8 +13,9 @@ class UserManager(BaseUserManager):
         )
         user.set_password(password)
         user.save()
-        user_group = Group.objects.get(name='Users')
-        user.groups.set((user_group,))
+        user_group = Group.objects.filter(name='Users')
+        if user_group.exists():
+            user.groups.set((user_group.first(),))
         return user
 
     def create_superuser(self, username, password, **extra_fields):

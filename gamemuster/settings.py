@@ -8,6 +8,15 @@ PROJECT_DIR = Path(__file__).parent
 BASE_DIR = PROJECT_DIR.parent
 sys.path.append(os.path.join(PROJECT_DIR, 'apps'))
 
+DEVELOPMENT = 'DEVELOPMENT'
+PRODUCTION = 'PRODUCTION'
+ENVIRONMENT = DEVELOPMENT if os.path.exists(BASE_DIR.joinpath('.env')) else PRODUCTION
+
+if ENVIRONMENT == DEVELOPMENT:
+    from dotenv import load_dotenv
+    load_dotenv()
+
+
 SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = bool(int(os.environ.get('DEBUG', 1)))
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split()

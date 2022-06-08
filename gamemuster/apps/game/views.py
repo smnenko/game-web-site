@@ -45,7 +45,6 @@ class GameListView(MustMultipleRequiredMixin, OrderingMixin, AbstractGameView, L
                     to_attr='prefetched_genres'
                 )
             )
-            .order_by('cover')
         )
 
         for key in self.available_filtering:
@@ -54,6 +53,9 @@ class GameListView(MustMultipleRequiredMixin, OrderingMixin, AbstractGameView, L
                 if ',' in value:
                     value = value.split(',')
                 queryset = self.apply_filter(queryset, key, value)
+
+        if not super().get_ordering():
+            queryset = queryset.order_by('cover')
 
         return queryset
 

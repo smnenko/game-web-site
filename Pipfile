@@ -21,6 +21,7 @@ django-compressor = "*"
 django-cors-headers = "*"
 docutils = "*"
 gunicorn = "*"
+python-dotenv = "*"
 
 [dev-packages]
 pytest-django = "*"

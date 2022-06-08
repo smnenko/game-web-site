@@ -12,7 +12,9 @@ class AvatarUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ('first_name', 'last_name')
+        fields = ('first_name', 'last_name', 'birth_date')
+
+    birth_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
 
 
 class UserUpdateForm(forms.ModelForm):

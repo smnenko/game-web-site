@@ -85,9 +85,13 @@ class UserDetailView(LoginRequiredMixin, DetailView):
     template_name = 'user/profile.html'
 
     def get_queryset(self):
-        return super().get_queryset().annotate(age=Value(
-            timezone.now().year - self.request.user.birth_date.year,
-            output_field=IntegerField())
+        return (
+            super().get_queryset()
+            .annotate(age=Value(
+                timezone.now().year - self.request.user.birth_date.year,
+                output_field=IntegerField())
+            )
+            .prefetch_related('avatar')
         )
 
 
@@ -99,7 +103,8 @@ class UserUpdateFormView(LoginRequiredMixin, MultipleFormsView):
         return {
             'first_name': self.request.user.first_name,
             'last_name': self.request.user.last_name,
-            'email': self.request.user.email
+            'email': self.request.user.email,
+            'birth_date': self.request.user.birth_date
         }
     
     def form_valid(self, form):
@@ -111,17 +116,15 @@ class UserUpdateFormView(LoginRequiredMixin, MultipleFormsView):
             messages.error(self.request, 'Please enter valid password')
             return self.form_invalid(form)
         elif isinstance(form, AvatarUpdateForm):
-            avatar_old = Avatar.objects.get(customuser=self.request.user)
-            avatar = Avatar.objects.create(avatar=form.cleaned_data['avatar'])
-            self.request.user.avatar = avatar
-            self.request.user.save(update_fields=('avatar',))
-
-            if avatar_old.id != 1:
-                os.remove(Path().resolve().joinpath('deploy', 'media', str(avatar_old.avatar)))
+            avatar_old = Avatar.objects.filter(user=self.request.user)
+            if avatar_old.exists():
+                os.remove(Path().resolve().joinpath('deploy', 'media', str(avatar_old.first().avatar)))
                 avatar_old.delete()
+
+            Avatar.objects.create(user=self.request.user, avatar=form.cleaned_data['avatar'])
             return super().form_valid(form)
         elif isinstance(form, ProfileUpdateForm):
-            fields = ('first_name', 'last_name')
+            fields = ('first_name', 'last_name', 'birth_date')
             for field in fields:
                 setattr(self.request.user, field, form.cleaned_data[field])
             self.request.user.save(update_fields=fields)

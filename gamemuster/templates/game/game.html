@@ -17,7 +17,7 @@
                             <h3>{{ game.name }}</h3>
                             <hr>
                             {% if game.storyline %}
-                                <p>game.storyline</p>
+                                <p>{{ game.storyline }}</p>
                             {% endif %}
                             {% if game.description %}
                                 <p>{{ game.description }}</p>
@@ -41,9 +41,10 @@
                             {% endif %}
                         </div>
                     </div>
+
                     {% if game.screenshots.all|length %}
                         <hr>
-                        <div id="carouselExampleIndicators" class="carousel slide py-3" data-bs-ride="carousel">
+                        <div id="carouselExampleIndicators" class="carousel slide py-3 w-100" data-bs-ride="carousel">
                             <div class="carousel-inner">
                                 {% for screenshot in game.screenshots.all %}
                                     {% if forloop.counter == 1 %}
@@ -67,7 +68,10 @@
                             </div>
                             <hr>
                         </div>
+                    {% else %}
+                        </div>
                     {% endif %}
+
                 <div class="col-12 col-lg-2">
                     {% if tweets|length %}
                         <span>Tweets:</span>
