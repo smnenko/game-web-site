@@ -72,7 +72,7 @@ class GameView(LoginRequiredMixin, PermissionRequiredMixin, MustSingleRequiredMi
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['tweets'] = GameTweetsParser().parse(self.object.name)
+        context['tweets'] = GameTweetsParser().get_widgets(self.object.name)
         return context
 
 

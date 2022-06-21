@@ -13,52 +13,48 @@ class Tweet:
 
 
 class GameTweetsParser:
+    URL = 'https://twitter.com'
     API = 'https://api.twitter.com/2'
+    WIDGET_URL = 'https://publish.twitter.com/oembed'
     TWEETS_URL = API + '/tweets/search/recent'
     AUTHOR_URL = API + '/users/{}'
     HEADERS = {'Authorization': f'Bearer {settings.TWITTER_BEARER}'}
 
     @staticmethod
     def _clear_name(name: str):
-        return ''.join(i for i in name if i.isalnum()).lower()
-
-    def _parse_author(self, author_id: int):
-        params = {'user.fields': 'username'}
-        response = requests.get(
-            self.AUTHOR_URL.format(author_id),
-            headers=self.HEADERS,
-            params=params
-        )
-        if response.status_code == 200:
-            return response.json()['data']['username']
+        return ''.join(i for i in name if i == ' ' or i.isalpha() or i.isdigit())
 
     def _parse(self, game_name: str):
         params = {
-            'query': f'#{game_name}',
-            'tweet.fields': 'text,created_at,author_id',
+            'query': f'{game_name}',
+            'expansions': 'author_id,entities.mentions.username',
+            'user.fields': 'created_at'
         }
         response = requests.get(
             self.TWEETS_URL,
             headers=self.HEADERS,
             params=params
         )
-        tweets = []
         if response.status_code == 200:
             response = response.json()
-            data = []
             if 'data' in response:
-                data = response['data']
-            for tweet in data:
-                author = self._parse_author(tweet['author_id'])
-                tweets.append(
-                    Tweet(author, tweet['text'], datetime.strptime(tweet['created_at'], '%Y-%m-%dT%H:%M:%S.%fZ'))
-                )
-        return tweets
+                return [
+                    f"{self.URL}/{i['entities']['mentions'][0]['username']}/status/{i['id']}"
+                    for i in response['data']
+                    if 'entities' in i
+                ]
+        return []
+
+    def get_widgets(self, game_name: str):
+        return [
+            requests.get(self.WIDGET_URL, params={'url': i, 'theme': 'dark'}).json()['html']
+            for i in self.parse(game_name)
+        ]
 
     def parse(self, game_name: str):
         clear_game_name = self._clear_name(game_name)
-        if cache.get(f'{clear_game_name}__tweets'):
-            return cache.get(f'{clear_game_name}__tweets')
+        if tweets := cache.get(f'{clear_game_name}__tweets'):
+            return tweets
 
         tweets = self._parse(clear_game_name)
         cache.set(f'{clear_game_name}__tweets', tweets, 60 * 10)
