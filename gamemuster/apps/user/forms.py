@@ -1,20 +1,7 @@
 from django import forms
 
-from .models import Avatar, CustomUser
-
-
-class AvatarUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Avatar
-        fields = ('avatar',)
-
-
-class ProfileUpdateForm(forms.ModelForm):
-    class Meta:
-        model = CustomUser
-        fields = ('first_name', 'last_name', 'birth_date')
-
-    birth_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+from .models import CustomUser
+from .models import Profile
 
 
 class UserUpdateForm(forms.ModelForm):
@@ -23,6 +10,20 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ('email',)
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('first_name', 'last_name', 'birth_date')
+
+    birth_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+
+
+class AvatarUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('avatar',)
 
 
 class LoginForm(forms.Form):

@@ -3,16 +3,28 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.utils.timezone import now
 from django.contrib.auth.models import Group
 
+from user import models
+
 
 class UserManager(BaseUserManager):
 
-    def create_user(self, username, password=None, **extra_fields):
+    def create_user(self, username, password, **extra_fields):
         user = self.model(
             username=username,
-            **extra_fields
+            is_active=extra_fields.get('is_active'),
+            is_staff=extra_fields.get('is_staff'),
+            is_superuser=extra_fields.get('is_superuser')
         )
         user.set_password(password)
         user.save()
+
+        models.Profile.objects.create(
+            user=user,
+            first_name=extra_fields.get('first_name'),
+            last_name=extra_fields.get('last_name'),
+            birth_date=extra_fields.get('birth_date'),
+        )
+
         user_group = Group.objects.filter(name='Users')
         if user_group.exists():
             user.groups.set((user_group.first(),))

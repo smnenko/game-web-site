@@ -1,18 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from imagekit.models.fields import ImageSpecField
-from imagekit.processors import Adjust, ResizeToFill
 
-from user.managers import UserManager
 from core.models import AbstractModel
+from user.managers import UserManager
 
 
 class CustomUser(AbstractModel, AbstractBaseUser, PermissionsMixin):
     username = models.CharField(unique=True, max_length=16)
     email = models.EmailField(unique=True, null=True)
-    first_name = models.CharField(max_length=64, null=True)
-    last_name = models.CharField(max_length=64, null=True)
-    birth_date = models.DateField(null=True)
+
+    is_email_confirmed = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'username'
@@ -24,19 +21,16 @@ class CustomUser(AbstractModel, AbstractBaseUser, PermissionsMixin):
         return self.username
 
 
-class Avatar(AbstractModel):
-    user = models.ForeignKey(
+class Profile(AbstractModel):
+    user = models.OneToOneField(
         to=CustomUser,
         on_delete=models.CASCADE,
-        related_name='avatar'
+        related_name='profile'
     )
-    avatar = models.ImageField(upload_to='users', null=True, blank=True)
-    avatar_small = ImageSpecField(format='PNG', source='avatar', processors=[
-        Adjust(contrast=1.2, sharpness=1.1), ResizeToFill(40, 40)
-    ], options={'quality': 90})
-    avatar_medium = ImageSpecField(format='PNG', source='avatar', processors=[
-        Adjust(contrast=1.2, sharpness=1.1), ResizeToFill(250, 250)
-    ], options={'quality': 90})
-    avatar_large = ImageSpecField(format='PNG', source='avatar', processors=[
-        ResizeToFill(500, 500)
-    ], options={'quality': 100})
+    avatar = models.ImageField(upload_to='users')
+    first_name = models.CharField(max_length=64, null=True)
+    last_name = models.CharField(max_length=64, null=True)
+    birth_date = models.DateField(null=True)
+
+    def __str__(self):
+        return f"{self.user.username.capitalize()}\' profile"
