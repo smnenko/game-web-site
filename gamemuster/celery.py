@@ -1,6 +1,7 @@
 import os
 
-from celery import Celery, shared_task
+from celery import Celery
+from django.core.cache import cache
 
 from django.core import management
 
@@ -23,4 +24,11 @@ def test_task(self):
 
 @app.task(bind=True)
 def load_games_from_igdb(self):
-    management.call_command('load_games')
+    cache_name = 'load_games_offset'
+    if cache.get(cache_name):
+        offset = cache.get(cache_name)
+        management.call_command(f'load_games', offset=offset)
+        cache.set(cache_name, offset + 500, 60 * 60 * 24)
+    else:
+        management.call_command(f'load_games', offset=0)
+        cache.set(cache_name, 500, 60 * 60 * 24)
