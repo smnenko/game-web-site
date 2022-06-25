@@ -46,14 +46,7 @@ class SignupFormView(FormView):
 
     def form_valid(self, form):
         try:
-            CustomUser.objects.create_user(
-                username=form.cleaned_data['username'],
-                password=form.cleaned_data['password'],
-                email=form.cleaned_data['email'],
-                first_name=form.cleaned_data['first_name'],
-                last_name=form.cleaned_data['last_name'],
-                birth_date=form.cleaned_data['birth_date'],
-            )
+            CustomUser.objects.create_user(**form.cleaned_data)
             return super().form_valid(form)
         except IntegrityError:
             return self.form_invalid(form)

@@ -1,8 +1,10 @@
+import random
 from typing import Union
 
 from django.db.models import Count, Prefetch
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
@@ -88,6 +90,15 @@ class MustView(LoginRequiredMixin, PermissionRequiredMixin, View):
         else:
             Musts(game=game_obj.first(), user=request.user).save()
         return HttpResponse(status=200)
+
+
+class RandomGameView(View):
+
+    def get(self, request, *args, **kwargs):
+        game_ids = Game.objects.values_list('id', flat=True)
+        return JsonResponse({
+            'url': reverse('game', kwargs={'pk': random.choice(game_ids)})
+        }, status=200)
 
 
 class GameDeleteView(PermissionRequiredMixin, AbstractGameView, DeleteView):

@@ -100,6 +100,20 @@ window.onload = function () {
             })
         }
     }
+
+    random_btn = document.getElementById('random_game')
+    random_btn.onclick = function () {
+        resp = fetch(document.location.origin + '/games/random/', {
+            method: 'GET',
+            cache: 'no-cache'
+        }).then((response) => response.json().then(
+            (result) => {
+                if (response.status == 200) {
+                    window.location.assign(document.location.origin + result.url)
+                }
+            }
+        ))
+    }
 }
 
 function toPage(n) {
