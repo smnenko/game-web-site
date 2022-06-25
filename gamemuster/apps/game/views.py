@@ -26,7 +26,7 @@ class GameListView(MustMultipleRequiredMixin, OrderingMixin, AbstractGameView, L
     template_name = 'game/games.html'
     available_orderings = ['name', 'date_release', 'rating__critics']
     available_filtering = ['name', 'genres', 'platforms']
-    paginate_by = 20
+    paginate_by = 10
 
     @staticmethod
     def apply_filter(queryset, key: str, value: Union[str, list]):

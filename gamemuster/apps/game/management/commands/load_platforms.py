@@ -17,8 +17,9 @@ class Command(BaseCommand):
         parser = IGDBPlatformParser()
         platforms = parser.parse()
 
+        existing_platforms = Platform.objects.values_list('id', flat=True)
         created = Platform.objects.bulk_create(
-            [Platform(id=i['id'], name=i['name']) for i in platforms]
+            [Platform(id=i['id'], name=i['name']) for i in platforms if i['id'] not in existing_platforms]
         )
 
         self.stdout.write(

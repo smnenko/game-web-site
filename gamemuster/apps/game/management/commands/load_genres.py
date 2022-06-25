@@ -17,12 +17,13 @@ class Command(BaseCommand):
         parser = IGDBGenreParser()
         genres = parser.parse()
 
+        existing_genres = Genre.objects.values_list('id', flat=True)
         created = Genre.objects.bulk_create(
-            [Genre(id=i['id'], name=i['name']) for i in genres]
+            [Genre(id=i['id'], name=i['name']) for i in genres if i['id'] not in existing_genres]
         )
 
         self.stdout.write(
             f"{self.style.NOTICE('COMMAND')}"
             f" | "
-            f"{self.style.SUCCESS(f'{len(genres)} genres successfully loaded')}"
+            f"{self.style.SUCCESS(f'{len(created)} genres successfully loaded')}"
         )
