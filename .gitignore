@@ -6,5 +6,5 @@ deploy/static_root
 deploy/media/CACHE
 deploy/media/users/*
 !deploy/media/users/default.png
-celerybeat-schedule.db
+celerybeat-schedule
 .env

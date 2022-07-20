@@ -25,7 +25,9 @@ THIRD_PARTY_APPS = [
     'imagekit',
     'debug_toolbar',
     'sass_processor',
-    'corsheaders'
+    'corsheaders',
+    'cloudinary_storage',
+    'cloudinary'
 ]
 
 PROJECT_APPS = [
@@ -175,3 +177,12 @@ IGDB_CLIENT_SECRET = os.environ.get('IGDB_CLIENT_SECRET')
 TWITTER_KEY = os.environ.get('TWITTER_KEY')
 TWITTER_SECRET = os.environ.get('TWITTER_SECRET')
 TWITTER_BEARER = os.environ.get('TWITTER_BEARER')
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET')
+}
+
+if ENVIRONMENT == PRODUCTION:
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
