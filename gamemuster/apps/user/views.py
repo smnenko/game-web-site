@@ -1,18 +1,14 @@
-import os
-from pathlib import Path
-
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
-from django.core.files.uploadedfile import TemporaryUploadedFile
 from django.db import IntegrityError
+from django.db.models import Value, IntegerField
 from django.shortcuts import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
 from django.views.generic import DetailView
 from django.views.generic.edit import FormView
 from django.views.generic.base import View
-from django.db.models import Value, IntegerField
 
 from core.views import MultipleFormsView
 from user.models import CustomUser
