@@ -21,25 +21,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = bool(int(os.environ.get('DEBUG', 1)))
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split()
 
-IGDB_CLIENT_ID = os.environ.get('IGDB_CLIENT_ID')
-IGDB_CLIENT_SECRET = os.environ.get('IGDB_CLIENT_SECRET')
-
-TWITTER_KEY = os.environ.get('TWITTER_KEY')
-TWITTER_SECRET = os.environ.get('TWITTER_SECRET')
-TWITTER_BEARER = os.environ.get('TWITTER_BEARER')
-
-REDIS_NAME = os.environ.get('REDIS_NAME')
-REDIS_USER = os.environ.get('REDIS_USER')
-REDIS_PASS = os.environ.get('REDIS_PASS')
-REDIS_HOST = os.environ.get('REDIS_HOST')
-REDIS_PORT = os.environ.get('REDIS_PORT')
-
-REDIS_URL = (
-    f"redis://{REDIS_USER}:{REDIS_PASS}@"
-    f"{REDIS_HOST}:{REDIS_PORT}/"
-    f"{REDIS_NAME}"
-)
-
 THIRD_PARTY_APPS = [
     'imagekit',
     'debug_toolbar',
@@ -109,6 +90,18 @@ DATABASES = {
     }
 }
 
+REDIS_NAME = os.environ.get('REDIS_NAME')
+REDIS_USER = os.environ.get('REDIS_USER')
+REDIS_PASS = os.environ.get('REDIS_PASS')
+REDIS_HOST = os.environ.get('REDIS_HOST')
+REDIS_PORT = os.environ.get('REDIS_PORT')
+
+REDIS_URL = (
+    f"redis://{REDIS_USER}:{REDIS_PASS}@"
+    f"{REDIS_HOST}:{REDIS_PORT}/"
+    f"{REDIS_NAME}"
+)
+
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
@@ -175,3 +168,10 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'sass_processor.finders.CssFinder',
 ]
+
+IGDB_CLIENT_ID = os.environ.get('IGDB_CLIENT_ID')
+IGDB_CLIENT_SECRET = os.environ.get('IGDB_CLIENT_SECRET')
+
+TWITTER_KEY = os.environ.get('TWITTER_KEY')
+TWITTER_SECRET = os.environ.get('TWITTER_SECRET')
+TWITTER_BEARER = os.environ.get('TWITTER_BEARER')
