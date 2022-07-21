@@ -1,15 +1,6 @@
-from datetime import datetime
-
 import requests
 from django.conf import settings
 from django.core.cache import cache
-
-
-class Tweet:
-    def __init__(self, author, text, created_at):
-        self.author = author
-        self.text = text
-        self.created_at = created_at
 
 
 class GameTweetsParser:
