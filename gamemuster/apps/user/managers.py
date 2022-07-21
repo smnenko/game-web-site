@@ -9,7 +9,7 @@ from user import models
 class UserManager(BaseUserManager):
 
     def create_user(self, username, password, **extra_fields):
-        user = self.model(username=username)
+        user = self.model(username=username, email=extra_fields.get('email'))
         user.set_password(password)
         user.save()
 
