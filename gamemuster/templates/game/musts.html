@@ -8,34 +8,14 @@
     <div class="container my-3" style="height: auto">
         <div class="content background-black">
             <div class="p-2">
-                {% if must_list %}
+                {% if musts_list|length %}
                     <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-2">
                         {% for must in musts_list %}
                             <div class="col">
-                                <div class="card text-white bg-dark h-100">
+                                <div class="card text-white bg-black h-100">
+                                    <span class="item btn btn-warning rounded pe-auto font-monospace w-100" url="{% url 'must' must.game.id %}" style="z-index: 2;opacity: 70%">UnMust</span>
                                     <img class="card-img-top" style="height: 20rem" src="{% if must.game.cover %}{{ must.game.cover }}{% else %}//images.igdb.com/igdb/image/upload/t_cover_big/nocover.png{% endif %}" alt="">
-                                    {% if user.is_authenticated %}
-                                        <div class="card-img-overlay p-0" style="opacity: 70%">
-                                            <span class="item btn btn-secondary rounded pe-auto font-monospace w-100" url="{% url 'must' must.game.id %}">UnMust</span>
-                                        </div>
-                                    {% endif %}
-                                    <div class="card-body" style="transform: rotate(0)">
-                                        <div class="card-subtitle">
-                                            {% for genre in must.game.genres.all %}
-                                                <span class="badge bg-secondary" style="font-size: 0.8rem">{{ genre.name }}</span>
-                                            {% endfor %}
-                                        </div>
-                                        <a class="card-title h4 text-decoration-none text-white stretched-link mt-2" href="{% url 'game' must.game.id %}">{{ must.game.name|truncatewords:5 }}</a>
-                                        <div class="card-text">
-                                            {% if must.game.storyline %}
-                                                {{ must.game.storyline }}
-                                            {% elif must.game.description %}
-                                                {{ must.game.description|truncatewords:10 }}
-                                            {% else %}
-                                                No description provided
-                                            {% endif %}
-                                        </div>
-                                    </div>
+                                    <a class="card-title h4 text-decoration-none text-white stretched-link mt-2" href="{% url 'game' must.game.id %}">{{ must.game.name|truncatewords:5 }}</a>
                                 </div>
                             </div>
                         {% endfor %}
