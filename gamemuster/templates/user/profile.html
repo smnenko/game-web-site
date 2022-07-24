@@ -29,15 +29,31 @@
                         </tr>
                         <tr>
                             <td class="fst-italic">Name</td>
-                            <td>{{ customuser.profile.first_name }} {{ customuser.profile.last_name }}</td>
+                            <td>
+                                {% if customuser.profile.first_name and customuser.profile.last_name %}
+                                {{ customuser.profile.first_name }} {{ customuser.profile.last_name }}
+                                {% elif customuser.profile.first_name %}
+                                {{ customuser.profile.first_name }}
+                                {% elif customuser.profile.last_name %}
+                                {{ customuser.profile.last_name }}
+                                {% else %}
+                                None
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
                             <td class="fst-italic">Age</td>
-                            <td>{{ customuser.age }}</td>
+                            <td>
+                                {% if customuser.age %}
+                                {{ customuser.age }}
+                                {% else %}
+                                None
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
                             <td class="fst-italic">Musts</td>
-                            <td>{{ customuser.musts.all|length }} games</td>
+                            <td>{{ customuser.musts.all|length }}</td>
                         </tr>
                     </table>
                 </div>

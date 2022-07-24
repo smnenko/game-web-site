@@ -18,33 +18,11 @@
                         {% endfor %}
                     </div>
                     {% csrf_token %}
-                    <div class="row border border-warning rounded m-0 my-3">
-                        {{ form.username | placeholder:' Username' | classes:'bg-black text-white py-2 border-0' }}
-                    </div>
-                        {{ form.errors.username }}
-                    <div class="row border border-warning rounded  m-0 my-3">
-                        {{ form.email | placeholder:' Email' | classes:'bg-black text-white py-2 border-0' }}
-                    </div>
-                        {{ form.errors.email }}
-                    <div class="row border border-warning rounded  m-0 my-3">
-                        {{ form.first_name | placeholder:' First name' | classes:'bg-black text-white py-2 border-0' }}
-                    </div>
-                        {{ form.errors.first_name }}
-                    <div class="row border border-warning rounded  m-0 my-3">
-                        {{ form.last_name | placeholder:' Last name' | classes:'bg-black text-white py-2 border-0' }}
-                    </div>
-                        {{ form.errors.last_name }}
-                    <div class="row border border-warning rounded  m-0 my-3">
-                        {{ form.birth_date | placeholder:' Date of birth (yyyy-mm-dd)' | classes:'bg-black text-white py-2 border-0' }}
-                    </div>
-                        {{ form.errors.birth_date }}
-                    <div class="row border border-warning rounded  m-0 my-3">
-                        {{ form.password | placeholder:'Password' | classes:'bg-black text-white py-2 border-0'}}
-                    </div>
-                        {{ form.errors.password }}
-                    <div class="row border border-warning rounded  m-0 my-3">
-                        {{ form.password_confirm | placeholder:' Confirm password' | classes:'bg-black text-white py-2 border-0'}}
-                    </div>
+                    {% for field in form %}
+                        <div class="row border border-warning rounded m-0 my-3">
+                            {{ field | placeholder:field.label | classes:'bg-black text-white py-2 border-0' }}
+                        </div>
+                    {% endfor %}
                         {{ form.errors.password_confirm }}
                     <input class="button button-filled bg-warning w-100" type="submit" value="Submit">
                 </form>

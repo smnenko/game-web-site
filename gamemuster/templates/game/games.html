@@ -75,30 +75,12 @@
                     <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-2">
                         {% for game in game_list %}
                             <div class="col">
-                                <div class="card text-white bg-dark h-100">
-                                    <img class="card-img-top" style="height: 16rem" src="{% if game.cover %}{{ game.cover }}{% else %}//images.igdb.com/igdb/image/upload/t_cover_big/nocover.png{% endif %}" alt="">
+                                <div class="card text-white bg-black h-100">
                                     {% if user.is_authenticated %}
-                                        <div class="card-img-overlay p-0" style="opacity: 70%">
-                                            <span class="item btn btn-secondary rounded pe-auto font-monospace w-100" url="{% url 'must' game.id %}">{% if game.status %}UnMust{% else %}Must{% endif %}</span>
-                                        </div>
+                                        <a class="item btn btn-warning rounded font-monospace w-100 position-relative" style="z-index: 2;opacity:70%" url="{% url 'must' game.id %}">{% if game.status %}UnMust{% else %}Must{% endif %}</a>
                                     {% endif %}
-                                    <div class="card-body" style="transform: rotate(0)">
-                                        <div class="card-subtitle">
-                                            {% for genre in game.prefetched_genres %}
-                                                <span class="badge bg-secondary" style="font-size: 0.8rem">{{ genre.name }}</span>
-                                            {% endfor %}
-                                        </div>
-                                        <a class="card-title h4 text-decoration-none text-white stretched-link mt-2" href="{% url 'game' game.id %}">{{ game.name|truncatewords:5 }}</a>
-                                        <div class="card-text">
-                                            {% if game.storyline %}
-                                                {{ game.storyline|truncatewords:15 }}
-                                            {% elif game.description %}
-                                                {{ game.description|truncatewords:10 }}
-                                            {% else %}
-                                                No description provided
-                                            {% endif %}
-                                        </div>
-                                    </div>
+                                    <img class="card-img" style="height: 18rem; object-fit: cover" src="{% if game.cover %}{{ game.cover }}{% else %}//images.igdb.com/igdb/image/upload/t_cover_big/nocover.png{% endif %}" alt="">
+                                    <a class="card-title h4 text-decoration-none text-white stretched-link mt-2" href="{% url 'game' game.id %}">{{ game.name|truncatewords:3 }}</a>
                                 </div>
                             </div>
                         {% endfor %}

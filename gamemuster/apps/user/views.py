@@ -80,6 +80,8 @@ class UserDetailView(LoginRequiredMixin, DetailView):
                 timezone.now().year - self.request.user.profile.birth_date.year,
                 output_field=IntegerField())
             )
+            if self.request.user.profile.birth_date
+            else super().get_queryset()
         )
 
 

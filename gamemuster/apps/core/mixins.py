@@ -34,6 +34,8 @@ class MustSingleRequiredMixin(SingleObjectMixin):
             .annotate(status=Exists(
                 Musts.objects.filter(user=self.request.user, game__id=pk))
             )
+            if self.request.user.is_authenticated
+            else super().get_queryset()
         )
 
 

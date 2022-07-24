@@ -148,3 +148,8 @@ class IGDBGameParser(IGDBParser):
         }
 
 
+class EpicGameStoreFreeParser:
+    URL = 'https://store-site-backend-static-ipv4.ak.epicgames.com/freeGamesPromotions?locale=en-US&country=PL'
+
+    def parse(self):
+        games = requests.get(self.URL)

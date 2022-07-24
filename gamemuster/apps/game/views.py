@@ -68,9 +68,8 @@ class GameListView(MustMultipleRequiredMixin, OrderingMixin, AbstractGameView, L
         return context
 
 
-class GameView(LoginRequiredMixin, PermissionRequiredMixin, MustSingleRequiredMixin, AbstractGameView, DetailView):
+class GameView(MustSingleRequiredMixin, AbstractGameView, DetailView):
     template_name = 'game/game.html'
-    permission_required = 'game.view_game'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
